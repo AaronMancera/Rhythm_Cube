@@ -10,6 +10,13 @@ using Firebase;
 using Firebase.Auth;
 using System;
 using System.Threading.Tasks;
+using Firebase.Extensions;
+/*
+Datos de pruebas
+username: Demo
+email: demo@gmail.com
+password: demo123
+*/
 public class FirebaseController : MonoBehaviour
 {
     //Objetos del canvas
@@ -23,6 +30,8 @@ public class FirebaseController : MonoBehaviour
     //Firebase
     Firebase.Auth.FirebaseAuth auth;
     Firebase.Auth.FirebaseUser user;
+
+    bool IsSingIn = false;
     void Start()
     {
         Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task => {
@@ -41,9 +50,20 @@ public class FirebaseController : MonoBehaviour
     }
 
     // Update is called once per frame
+    bool IsSinged = false;
     void Update()
     {
-        
+        if(IsSingIn)
+        {
+            if(!IsSinged)
+            {
+                IsSinged = true;
+                profileUserName_Text.text=""+user.DisplayName;
+                profileEmail_Text.text=""+user.Email;
+                OpenProfilePanel();
+            }
+        }
+
     }
     //Control de que paneles mostrar en el canvas
     public void OpenLoginPanel()
@@ -92,6 +112,8 @@ public class FirebaseController : MonoBehaviour
     //Cerrar sesion
     public void LogOut()
     {
+        //Cierra la sesion en el sistema
+        auth.SignOut();
         profileUserName_Text.text="";
         profileEmail_Text.text="";
         OpenLoginPanel();
@@ -139,7 +161,8 @@ public class FirebaseController : MonoBehaviour
     //Creacion de usuario de firebase auth
     void CreateUser(string email, string password,string username)
     {
-        auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(task => {
+        //se utiliza ContinueWithOnMainThread para que no se generen concurrencias al realizarlo en una rama inferior a la principal
+        auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task => {
             if (task.IsCanceled) {
                 Debug.LogError("CreateUserWithEmailAndPasswordAsync was canceled.");
                 return;
@@ -160,7 +183,7 @@ public class FirebaseController : MonoBehaviour
     //Iniciar sesion de usuario de firebase auth
     void SingInUser(string email, string password)
     {
-        auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(task => {
+        auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task => {
             if (task.IsCanceled) {
                 Debug.LogError("SignInWithEmailAndPasswordAsync was canceled.");
                 return;
@@ -197,6 +220,8 @@ public class FirebaseController : MonoBehaviour
             user = auth.CurrentUser;
             if (signedIn) {
                 Debug.Log("Signed in " + user.UserId);
+                IsSingIn=true;
+
             }
         }
     }
