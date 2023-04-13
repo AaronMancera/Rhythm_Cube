@@ -5,7 +5,11 @@ using UnityEngine;
 using UnityEngine.UI;
 //Using a TMP
 using TMPro;
-
+//Firebase
+using Firebase;
+using Firebase.Auth;
+using System;
+using System.Threading.Tasks;
 public class FirebaseController : MonoBehaviour
 {
     //Objetos del canvas
@@ -16,6 +20,31 @@ public class FirebaseController : MonoBehaviour
     public TMP_Text notif_Title_Text, notif_Message_Text, profileUserName_Text, profileEmail_Text;
     //Toggle
     public Toggle remeberMe;
+    //Firebase
+    Firebase.Auth.FirebaseAuth auth;
+    Firebase.Auth.FirebaseUser user;
+    void Start()
+    {
+        Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task => {
+        var dependencyStatus = task.Result;
+        if (dependencyStatus == Firebase.DependencyStatus.Available) {
+            // Create and hold a reference to your FirebaseApp,
+            // where app is a Firebase.FirebaseApp property of your application class.
+            InitializeFirebase();
+            // Set a flag here to indicate whether Firebase is ready to use by your app.
+        } else {
+            UnityEngine.Debug.LogError(System.String.Format(
+            "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
+            // Firebase Unity SDK is not safe to use here.
+        }
+        });
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
     //Control de que paneles mostrar en el canvas
     public void OpenLoginPanel()
     {
@@ -58,6 +87,7 @@ public class FirebaseController : MonoBehaviour
             return;
         }
         //TODO: Hacer el login
+        SingInUser(loginEmail.text,loginPassword.text);
     }
     //Cerrar sesion
     public void LogOut()
@@ -75,6 +105,7 @@ public class FirebaseController : MonoBehaviour
             return;
         }
         //TODO: Hacer el registro
+        CreateUser(singupEmail.text,singupPassword.text,singupUsername.text);
     }
     //Contraseña olvidad
     public void ForgetPass()
@@ -102,16 +133,103 @@ public class FirebaseController : MonoBehaviour
         notificationPanel.SetActive(false);
     }
 
+/*
+    Siguiendo el getStarted de https://firebase.google.com/docs/auth/unity/start?hl=es-419
+*/
+    //Creacion de usuario de firebase auth
+    void CreateUser(string email, string password,string username)
+    {
+        auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(task => {
+            if (task.IsCanceled) {
+                Debug.LogError("CreateUserWithEmailAndPasswordAsync was canceled.");
+                return;
+            }
+            if (task.IsFaulted) {
+                Debug.LogError("CreateUserWithEmailAndPasswordAsync encountered an error: " + task.Exception);
+                return;
+            }
 
+        // Firebase user has been created.
+        Firebase.Auth.FirebaseUser newUser = task.Result;
+        Debug.LogFormat("Firebase user created successfully: {0} ({1})",
+            newUser.DisplayName, newUser.UserId);
+            //Primero se crea el usuario con email y contraseña y luego se le asigna el nombre
+            UpdateUserProfile(username);
+        });
+    }
+    //Iniciar sesion de usuario de firebase auth
+    void SingInUser(string email, string password)
+    {
+        auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(task => {
+            if (task.IsCanceled) {
+                Debug.LogError("SignInWithEmailAndPasswordAsync was canceled.");
+                return;
+            }
+            if (task.IsFaulted) {
+                Debug.LogError("SignInWithEmailAndPasswordAsync encountered an error: " + task.Exception);
+                return;
+            }
+
+        Firebase.Auth.FirebaseUser newUser = task.Result;
+        Debug.LogFormat("User signed in successfully: {0} ({1})",
+            newUser.DisplayName, newUser.UserId);
+        //Asignacion de valores para el panel profile
+        profileUserName_Text.text=""+newUser.DisplayName;
+        profileEmail_Text.text=""+newUser.Email;
+        OpenProfilePanel();
+        });
+    }
+    //Inicializacion de firebase
+    void InitializeFirebase() 
+    {
+        auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
+        auth.StateChanged += AuthStateChanged;
+        AuthStateChanged(this, null);
+    }
+
+    void AuthStateChanged(object sender, System.EventArgs eventArgs) 
+    {
+        if (auth.CurrentUser != user) {
+            bool signedIn = user != auth.CurrentUser && auth.CurrentUser != null;
+            if (!signedIn && user != null) {
+                Debug.Log("Signed out " + user.UserId);
+            }
+            user = auth.CurrentUser;
+            if (signedIn) {
+                Debug.Log("Signed in " + user.UserId);
+            }
+        }
+    }
+    //Cuando se cierre la escena
+    void OnDestroy() 
+    {
+        auth.StateChanged -= AuthStateChanged;
+        auth = null;
+    }
+    //Actualizar usuario
+    void UpdateUserProfile(string UserName){
+        Firebase.Auth.FirebaseUser user = auth.CurrentUser;
+        if (user != null) {
+            Firebase.Auth.UserProfile profile = new Firebase.Auth.UserProfile {
+                DisplayName = UserName,
+                PhotoUrl = new System.Uri("https://dummyimage.com/150"),
+            };
+            user.UpdateUserProfileAsync(profile).ContinueWith(task => {
+                if (task.IsCanceled) {
+                Debug.LogError("UpdateUserProfileAsync was canceled.");
+                return;
+                }
+                if (task.IsFaulted) {
+                Debug.LogError("UpdateUserProfileAsync encountered an error: " + task.Exception);
+                return;
+                }
+
+                Debug.Log("User profile updated successfully.");
+                showNotificationMessage("Alert", "Account Successful Created");
+
+            });
+        }
+    }
     // Start is called before the first frame update
-    void Start()
-    {
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
