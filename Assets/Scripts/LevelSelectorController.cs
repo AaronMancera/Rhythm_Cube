@@ -15,6 +15,9 @@ public class LevelSelectorController : MonoBehaviour
     {
         levelPanel.SetActive(true);
         profilePanel.SetActive(false);
+        //Para que muestre el nombre
+        userName = PlayerPrefs.GetString("UserName");
+        profileUserName_Text.text = userName;
     }
     public void OpenProfilePanel()
     {
@@ -22,12 +25,7 @@ public class LevelSelectorController : MonoBehaviour
         profilePanel.SetActive(true);
     }
    
-    //Utilizamos el metodo awake para que realice esta accion nada mas ser invocado
-    private void Awake()
-    {
-        userName = PlayerPrefs.GetString("UserName");
-        profileUserName_Text.text = userName;
-    }
+   
     // Start is called before the first frame update
     void Start()
     {

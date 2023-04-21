@@ -29,8 +29,15 @@ public class FirebaseController : MonoBehaviour
     Firebase.Auth.FirebaseUser user;
 
     bool IsSingIn = false;
+    //Esto es para que cada vez que se inicie de nuevo el juego reinicie estos valores guardados netre sesiones
+    private void Awake()
+    {
+        PlayerPrefs.DeleteKey("UserName");
+        PlayerPrefs.DeleteKey("UserEmail");
+    }
     void Start()
     {
+
         Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
         {
             var dependencyStatus = task.Result;
@@ -58,6 +65,7 @@ public class FirebaseController : MonoBehaviour
         {
             if (!IsSinged)
             {
+                Debug.Log("Sesion guardada");
                 IsSinged = true;
                 //Esto guarda estos valores se guardan entre sesiones de juego
                 PlayerPrefs.SetString("UserName", user.DisplayName);
@@ -67,6 +75,7 @@ public class FirebaseController : MonoBehaviour
                 OpenProfilePanel();
             }
         }
+        
 
     }
     //Control de que paneles mostrar en el canvas
@@ -122,6 +131,7 @@ public class FirebaseController : MonoBehaviour
         profileEmail_Text.text = "";
         OpenLoginPanel();
     }
+    
     //Registro
     public void SingUpUser()
     {
@@ -274,6 +284,16 @@ public class FirebaseController : MonoBehaviour
             });
         }
     }
-    // Start is called before the first frame update
+
+    private void OnApplicationQuit()
+    {
+        if (user != null)
+        {
+            if (!remeberMe.isOn)
+            {
+                LogOut();
+            }
+        }
+    }
 
 }
