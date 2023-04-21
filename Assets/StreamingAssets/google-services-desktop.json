@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1075898799748",
+    "project_id": "tfgrhythmcube",
+    "storage_bucket": "tfgrhythmcube.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1075898799748:android:ed6bc2139d535387ca14d1",
+        "android_client_info": {
+          "package_name": "com.aa.rhythmcube"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1075898799748-jsgggrcld6dr77rf1vlkaqkdch4vekp2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuI6G4H6CGQMqsLUndYUmjZS7nwIOvoow"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1075898799748-jsgggrcld6dr77rf1vlkaqkdch4vekp2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
