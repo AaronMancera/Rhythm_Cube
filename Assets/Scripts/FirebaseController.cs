@@ -6,8 +6,11 @@ using UnityEngine.UI;
 //Using a TMP
 using TMPro;
 //Firebase
-
+using Firebase;
+using System;
+using System.Threading.Tasks;
 using Firebase.Extensions;
+using Firebase.Auth;
 /*
 Datos de pruebas
 username: Demo
@@ -75,7 +78,7 @@ public class FirebaseController : MonoBehaviour
                 OpenProfilePanel();
             }
         }
-        
+
 
     }
     //Control de que paneles mostrar en el canvas
@@ -131,7 +134,7 @@ public class FirebaseController : MonoBehaviour
         profileEmail_Text.text = "";
         OpenLoginPanel();
     }
-    
+
     //Registro
     public void SingUpUser()
     {
@@ -186,6 +189,11 @@ public class FirebaseController : MonoBehaviour
             if (task.IsFaulted)
             {
                 Debug.LogError("CreateUserWithEmailAndPasswordAsync encountered an error: " + task.Exception);
+                //Tratamiento de errores
+                foreach (Exception exception in task.Exception.Flatten().InnerExceptions)
+                {
+                    GetErrorMessage(exception);
+                }
                 return;
             }
 
@@ -207,9 +215,15 @@ public class FirebaseController : MonoBehaviour
                 Debug.LogError("SignInWithEmailAndPasswordAsync was canceled.");
                 return;
             }
+            //Tratamiento de error a la hora de inicar sesion
             if (task.IsFaulted)
             {
                 Debug.LogError("SignInWithEmailAndPasswordAsync encountered an error: " + task.Exception);
+                //Tratamiento de errores
+                foreach (Exception exception in task.Exception.Flatten().InnerExceptions)
+                {
+                    GetErrorMessage(exception);
+                }
                 return;
             }
 
@@ -295,5 +309,46 @@ public class FirebaseController : MonoBehaviour
             }
         }
     }
-
+    private void GetErrorMessage(Exception exception)
+    {
+        Firebase.FirebaseException firebaseEx = exception as Firebase.FirebaseException;
+        if (firebaseEx != null)
+        {
+            var errorCode = (AuthError)firebaseEx.ErrorCode;
+            showNotificationMessage("Error", GetErrorMessage(errorCode));
+        }
+    }
+    //Recogedor de errores
+    private static string GetErrorMessage(AuthError errorCode)
+    {
+        var message = "";
+        switch (errorCode)
+        {
+            case AuthError.AccountExistsWithDifferentCredentials:
+                message = "Account Not Exist";
+                break;
+            case AuthError.MissingPassword:
+                message = "Missing Password";
+                break;
+            case AuthError.WeakPassword:
+                message = "Password So Week";
+                break;
+            case AuthError.WrongPassword:
+                message = "Wrong Password";
+                break;
+            case AuthError.EmailAlreadyInUse:
+                message = "Your Email Alredy in User";
+                break;
+            case AuthError.InvalidEmail:
+                message = "Your Email Invalid";
+                break;
+            case AuthError.MissingEmail:
+                message = "Email Missing";
+                break;
+            default:
+                message = "Invalid Error";
+                break;
+        }
+        return message;
+    }
 }
