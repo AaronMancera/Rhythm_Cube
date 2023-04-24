@@ -18,9 +18,7 @@ username: Demo
 email: demo@gmail.com
 password: demo123
 ---------------------
-username: Aaron
-email: aaron.mancera.cantador.alu@iesjulioverne.es
-password: Aaron2003
+
 */
 public class FirebaseController : MonoBehaviour
 {
