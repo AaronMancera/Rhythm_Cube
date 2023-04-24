@@ -13,9 +13,14 @@ using Firebase.Extensions;
 using Firebase.Auth;
 /*
 Datos de pruebas
+---------------------
 username: Demo
 email: demo@gmail.com
 password: demo123
+---------------------
+username: Aaron
+email: aaron.mancera.cantador.alu@iesjulioverne.es
+password: Aaron2003
 */
 public class FirebaseController : MonoBehaviour
 {
@@ -202,6 +207,9 @@ public class FirebaseController : MonoBehaviour
             Firebase.Auth.FirebaseUser newUser = task.Result;
             Debug.LogFormat("Firebase user created successfully: {0} ({1})",
                 newUser.DisplayName, newUser.UserId);
+            //Asignacion de valores para el panel profile
+            profileUserName_Text.text = "" + newUser.DisplayName;
+            profileEmail_Text.text = "" + newUser.Email;
             //Primero se crea el usuario con email y contraseña y luego se le asigna el nombre
             UpdateUserProfile(username);
         });
