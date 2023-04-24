@@ -154,7 +154,8 @@ public class FirebaseController : MonoBehaviour
             showNotificationMessage("Error", "Forget Email Empty");
             return;
         }
-        //TODO: Hacer la recuperacion de contraseña
+        //Metodo de recuperacion de contraseña mediante el email
+        forgetPasswordSubmit(forgetPassEmail.text);
     }
     //Creacion de la notificacion
     private void showNotificationMessage(string title, string message)
@@ -350,5 +351,26 @@ public class FirebaseController : MonoBehaviour
                 break;
         }
         return message;
+    }
+    //Metodo para recuperar contraseña
+    void forgetPasswordSubmit(String forgetPasswordEmail)
+    {
+        auth.SendPasswordResetEmailAsync(forgetPasswordEmail).ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.LogError("SendPasswordResetEmailAsync was canceled");
+            }
+            if (task.IsFaulted)
+            {
+                //Tratamiento de errores
+                foreach (Exception exception in task.Exception.Flatten().InnerExceptions)
+                {
+                    GetErrorMessage(exception);
+                }
+                return;
+            }
+            showNotificationMessage("Alert", "Successfully Send Email");
+        });
     }
 }
