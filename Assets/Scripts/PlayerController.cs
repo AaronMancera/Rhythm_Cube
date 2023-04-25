@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour
     // Función para detectar si el cubo está tocando el suelo
     private bool IsGrounded()
     {
+        //distancia
         float extraHeightText = 0.1f;
         RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0f, Vector2.down, extraHeightText, LayerMask.GetMask("Ground"));
         return raycastHit.collider != null;
