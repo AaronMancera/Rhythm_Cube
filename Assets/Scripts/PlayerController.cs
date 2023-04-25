@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     private int movementMode = 0;
     //fuerza de vuelo
     public float flyforce;
-    private float timeToFall=0;
+    private float timeToFall = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -37,11 +37,11 @@ public class PlayerController : MonoBehaviour
         if (IsFly())
         {
             movementMode = 1;
+
         }
         //si el movimiento no esta en modo volar entonces
         else
         {
-            
             movementMode = 0;
         }
         // Saltar cuando detecte que esta en el suelo tanto con spacio como tocar la pantalla
@@ -58,6 +58,7 @@ public class PlayerController : MonoBehaviour
             {
                 rb.AddForce(Vector2.up * flyforce, ForceMode2D.Impulse);
                 timeToFall = 0;
+                
             }
             else
             {
