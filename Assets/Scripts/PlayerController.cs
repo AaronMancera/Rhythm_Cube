@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Ponerlo a 60fps
+        Application.targetFrameRate = 60;
         //Se inicializa
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
@@ -30,6 +32,18 @@ public class PlayerController : MonoBehaviour
         {
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
+    }
+    /*
+     * NOTEERROR: Si ponemos el codigo de fixedupdate ne el update el personaje salta demasiadas veces en tan poco tiempo debido al internvalo de ejecucion de update, sin embargo con update el intervalo es fij y siempoire el mismo por lo que no genera ese error
+     * Error: si se pulsa muchas veces aun asi sigue saltando el doble
+     * FixedUpdate() es un método que se utiliza en Unity para actualizar físicas y movimiento de objetos.
+     * Se ejecuta en intervalos de tiempo fijos y constantes, independientemente de la frecuencia de cuadros (fps) de la aplicación. 
+     * Esto significa que el FixedUpdate() se ejecutará un número fijo de veces por segundo, independientemente de si el juego se está ejecutando a 30 fps o 100 fps.
+     * Se puede utilizar Update() para la lógica de juego no relacionada con la física, mientras que FixedUpdate() se utiliza para actualizaciones de física
+     */
+    private void FixedUpdate()
+    {
+       
     }
     // Función para detectar si el cubo está tocando el suelo
     private bool IsGrounded()
