@@ -22,6 +22,8 @@ public class GameController : MonoBehaviour
     //este es el script de camra que desde el game controller vamos a realizar un metodo
     public CameraController cameraController;
     private float endTime;
+    //bool ha muerto
+    private bool dead = false;
 
     private void Awake()
     {
@@ -74,6 +76,16 @@ public class GameController : MonoBehaviour
             //tiempo vivo en el nivel
             time += Time.deltaTime;
             Score();
+            //Muerte
+            if (dead)
+            {
+                Reset();
+            }
+
+            else if (IsDead())
+            {
+                dead = true;
+            }
         }
 
     }
@@ -114,10 +126,19 @@ public class GameController : MonoBehaviour
         score = (int)time;
         scoreText.text = score.ToString();
     }
-    //Metodo cuando toque el trigger end
+    //Metodo que detecta cuando toca un layer End
     private bool IsEnd()
     {
         RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0f, Vector2.down, 0.1f, LayerMask.GetMask("End"));
         return raycastHit.collider != null;
     }
+    //Metodo que detecta cuando toca un layer DeadZone
+    private bool IsDead()
+    {
+        //Vextor que detecta eje y y eje x
+        Vector2 direction = new Vector2(1, 1);
+        RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0f, direction, 0.1f, LayerMask.GetMask("DeadZone"));
+        return raycastHit.collider != null;
+    }
+
 }
