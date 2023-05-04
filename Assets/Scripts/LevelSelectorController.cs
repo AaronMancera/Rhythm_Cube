@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelSelectorController : MonoBehaviour
 {
@@ -24,7 +25,10 @@ public class LevelSelectorController : MonoBehaviour
         levelPanel.SetActive(false);
         profilePanel.SetActive(true);
     }
-   
+
+    public void SelectLevel1() {
+        SceneManager.LoadScene(1);
+    }
    
     // Start is called before the first frame update
     void Start()
