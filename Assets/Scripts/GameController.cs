@@ -119,6 +119,10 @@ public class GameController : MonoBehaviour
         //player.SetActive(true);
 
     }
+    //Salir al menu
+    public void Exit() {
+        SceneManager.LoadScene(0);
+    }
     //Puntuacion
     //TODO: El score debe guardarse en las PlayerPrefs para que se comparta los valores del menu de juego y el menu de pause
     private void Score()
