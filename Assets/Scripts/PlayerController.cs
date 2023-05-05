@@ -20,8 +20,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Ponerlo a 60fps
-        Application.targetFrameRate = 60;
+
         //Se inicializa
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
@@ -45,7 +44,11 @@ public class PlayerController : MonoBehaviour
             movementMode = 0;
         }
         // Saltar cuando detecte que esta en el suelo tanto con spacio como tocar la pantalla
-        if ((Input.GetKeyDown(KeyCode.Space) || Input.touchCount > 0) && IsGrounded() && movementMode == 0)
+        //if ((Input.GetKeyDown(KeyCode.Space) || (Input.touchCount > 0 && Input.touchCount < 2)) && IsGrounded() && movementMode == 0)
+        //{
+        //    rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        //}
+        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded() && movementMode == 0)
         {
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
@@ -58,7 +61,7 @@ public class PlayerController : MonoBehaviour
             {
                 rb.AddForce(Vector2.up * flyforce, ForceMode2D.Impulse);
                 timeToFall = 0;
-                
+
             }
             else
             {
@@ -71,6 +74,14 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+    public void jumpClick()
+    {
+        if (IsGrounded() && movementMode == 0)
+        {
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        }
+    }
+    private void fly() { }
     /*
      * NOTEERROR: Si ponemos el codigo de fixedupdate ne el update el personaje salta demasiadas veces en tan poco tiempo debido al internvalo de ejecucion de update, sin embargo con update el intervalo es fij y siempoire el mismo por lo que no genera ese error
      * Error: si se pulsa muchas veces aun asi sigue saltando el doble
