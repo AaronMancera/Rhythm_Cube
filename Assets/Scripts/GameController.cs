@@ -33,7 +33,10 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Ponerlo a 60fps
+        Application.targetFrameRate = 60;
         audioSource.Play();
+        Time.timeScale = 1f;
 
     }
 

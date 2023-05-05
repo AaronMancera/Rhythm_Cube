@@ -25,7 +25,10 @@ public class LevelSelectorController : MonoBehaviour
         levelPanel.SetActive(false);
         profilePanel.SetActive(true);
     }
-
+    public void SelectLeve0()
+    {
+        SceneManager.LoadScene(0);
+    }
     public void SelectLevel1() {
         SceneManager.LoadScene(1);
     }
