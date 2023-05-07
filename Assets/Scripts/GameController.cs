@@ -13,17 +13,21 @@ public class GameController : MonoBehaviour
     //textos
     public TMP_Text usernameText, scoreText, bestScoreText;
     //puntuacion
-    public int score;
+    public int score, bestScore;
     private float time;
     //bool fin del jego
     private bool end = false;
     public BoxCollider2D boxCollider;
     public GameObject player;
+    private Vector3 spawnPlayer;
+
     //este es el script de camra que desde el game controller vamos a realizar un metodo
     public CameraController cameraController;
     private float endTime;
     //bool ha muerto
     private bool dead = false;
+    public GameObject prefab; // asigna el prefab en el inspector
+
 
     private void Awake()
     {
@@ -37,7 +41,9 @@ public class GameController : MonoBehaviour
         Application.targetFrameRate = 60;
         audioSource.Play();
         Time.timeScale = 1f;
-
+        spawnPlayer = player.transform.position;
+        //TODO: Coger de la base de datos el mejor score
+        bestScore = 0;
     }
 
     // Update is called once per frame
@@ -46,48 +52,50 @@ public class GameController : MonoBehaviour
         //TODO: Poner una configuracion para el volumen
         //establecer el volumen
         audioSource.volume = 0.5f;
-
-        //End
-        if (end)
+        if (GameObject.FindGameObjectWithTag("Player") != null)
         {
-            //el metodo que realizara si se ha activado al menos una vez el trigger
-            //camara deja de seguir al objeto
-            cameraController.stopFollow();
-            //y espera 3 segundos para mostrar el menu
-            if (endTime >= 3f)
+            //End
+            if (end)
             {
-                endingPanel.SetActive(true);
-                pausePanel.SetActive(false);
-                gamePanel.SetActive(false);
-                player.SetActive(false);
+                //el metodo que realizara si se ha activado al menos una vez el trigger
+                //camara deja de seguir al objeto
+                cameraController.stopFollow();
+                //y espera 3 segundos para mostrar el menu
+                if (endTime >= 3f)
+                {
+                    endingPanel.SetActive(true);
+                    pausePanel.SetActive(false);
+                    gamePanel.SetActive(false);
+                    player.SetActive(false);
+                }
+                else
+                {
+                    endTime += Time.deltaTime;
+                    Debug.Log(endTime);
+                }
             }
+            //trigger
+            else if (IsEnd())
+            {
+                end = true;
+
+            }
+            //score in gameplay
             else
             {
-                endTime += Time.deltaTime;
-                Debug.Log(endTime);
-            }
-        }
-        //trigger
-        else if (IsEnd())
-        {
-            end = true;
+                //tiempo vivo en el nivel
+                time += Time.deltaTime;
+                Score();
+                //Muerte
+                if (dead)
+                {
+                    Reset();
+                }
 
-        }
-        //score in gameplay
-        else
-        {
-            //tiempo vivo en el nivel
-            time += Time.deltaTime;
-            Score();
-            //Muerte
-            if (dead)
-            {
-                Reset();
-            }
-
-            else if (IsDead())
-            {
-                dead = true;
+                else if (IsDead())
+                {
+                    dead = true;
+                }
             }
         }
 
@@ -115,15 +123,44 @@ public class GameController : MonoBehaviour
     public void Reset()
     {
         // Obtener el índice de la escena actual
-        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        //int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         // Cargar de nuevo la misma escena
-        SceneManager.LoadScene(currentSceneIndex);
-        Time.timeScale = 1f;
+        //SceneManager.LoadScene(currentSceneIndex);
+        //Time.timeScale = 1f;
+
         //player.SetActive(true);
+        //Cuando muera eliminara el game object y esperara 5 segundos con la musica pausada para respaunear otro jugador
+        Destroy(player);
+        audioSource.Stop();
+        // Esperamos 5 segundos
+        Invoke("ReaparecerJugador", 3f);
+
 
     }
+    void ReaparecerJugador()
+    {
+        // Creamos una nueva instancia del objeto en la posición de reaparición
+        GameObject nuevoObjeto = Instantiate(prefab, spawnPlayer, Quaternion.identity);
+        // Asignamos el nuevo objeto a la variable para poder eliminarlo en el futuro
+
+        player = nuevoObjeto;
+        boxCollider = player.GetComponent<BoxCollider2D>();
+        dead = false;
+        if (score > bestScore)
+        {
+            bestScore = score;
+            bestScoreText.text = bestScore.ToString();
+        }
+        time = 0;
+        scoreText.text = score.ToString();
+
+
+        // Reiniciamos el AudioSource
+        audioSource.Play();
+    }
     //Salir al menu
-    public void Exit() {
+    public void Exit()
+    {
         SceneManager.LoadScene(0);
     }
     //Puntuacion
