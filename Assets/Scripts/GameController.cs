@@ -44,8 +44,12 @@ public class GameController : MonoBehaviour
         spawnPlayer = player.transform.position;
         //TODO: Coger de la base de datos el mejor score
         bestScore = 0;
+        InitialText();
     }
-
+    void InitialText() 
+    {
+        usernameText.text=PlayerPrefs.GetString("UserName");
+    }
     // Update is called once per frame
     void Update()
     {

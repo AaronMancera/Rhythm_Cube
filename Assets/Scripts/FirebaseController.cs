@@ -91,6 +91,7 @@ public class FirebaseController : MonoBehaviour
         singupPanel.SetActive(false);
         profilePanel.SetActive(false);
         forgetPasswordPanel.SetActive(false);
+        CleanValues();
     }
 
     public void OpenSingUpPanel()
@@ -99,6 +100,7 @@ public class FirebaseController : MonoBehaviour
         singupPanel.SetActive(true);
         profilePanel.SetActive(false);
         forgetPasswordPanel.SetActive(false);
+        CleanValues();
     }
 
     public void OpenProfilePanel()
@@ -107,6 +109,7 @@ public class FirebaseController : MonoBehaviour
         singupPanel.SetActive(false);
         profilePanel.SetActive(true);
         forgetPasswordPanel.SetActive(false);
+        CleanValues();
     }
 
     public void OpenForgetPassPanel()
@@ -115,8 +118,19 @@ public class FirebaseController : MonoBehaviour
         singupPanel.SetActive(false);
         profilePanel.SetActive(false);
         forgetPasswordPanel.SetActive(true);
+        CleanValues();
     }
 
+    private void CleanValues()
+    {
+        loginEmail.text = "";
+        loginPassword.text = ""; 
+        singupEmail.text = ""; 
+        singupPassword.text = ""; 
+        singupCPasswprd.text = ""; 
+        singupUsername.text = ""; 
+        forgetPassEmail.text = "";
+    }
     //Inicio de sesion
     public void LoginUser()
     {
@@ -187,12 +201,12 @@ public class FirebaseController : MonoBehaviour
         {
             if (task.IsCanceled)
             {
-                Debug.LogError("CreateUserWithEmailAndPasswordAsync was canceled.");
+                //Debug.LogError("CreateUserWithEmailAndPasswordAsync was canceled.");
                 return;
             }
             if (task.IsFaulted)
             {
-                Debug.LogError("CreateUserWithEmailAndPasswordAsync encountered an error: " + task.Exception);
+                //Debug.LogError("CreateUserWithEmailAndPasswordAsync encountered an error: " + task.Exception);
                 //Tratamiento de errores
                 foreach (Exception exception in task.Exception.Flatten().InnerExceptions)
                 {
@@ -205,9 +219,7 @@ public class FirebaseController : MonoBehaviour
             Firebase.Auth.FirebaseUser newUser = task.Result;
             Debug.LogFormat("Firebase user created successfully: {0} ({1})",
                 newUser.DisplayName, newUser.UserId);
-            //Asignacion de valores para el panel profile
-            profileUserName_Text.text = "" + newUser.DisplayName;
-            profileEmail_Text.text = "" + newUser.Email;
+
             //Primero se crea el usuario con email y contraseña y luego se le asigna el nombre
             UpdateUserProfile(username);
         });
@@ -219,13 +231,13 @@ public class FirebaseController : MonoBehaviour
         {
             if (task.IsCanceled)
             {
-                Debug.LogError("SignInWithEmailAndPasswordAsync was canceled.");
+                //Debug.LogError("SignInWithEmailAndPasswordAsync was canceled.");
                 return;
             }
             //Tratamiento de error a la hora de inicar sesion
             if (task.IsFaulted)
             {
-                Debug.LogError("SignInWithEmailAndPasswordAsync encountered an error: " + task.Exception);
+                //Debug.LogError("SignInWithEmailAndPasswordAsync encountered an error: " + task.Exception);
                 //Tratamiento de errores
                 foreach (Exception exception in task.Exception.Flatten().InnerExceptions)
                 {
@@ -290,15 +302,14 @@ public class FirebaseController : MonoBehaviour
             {
                 if (task.IsCanceled)
                 {
-                    Debug.LogError("UpdateUserProfileAsync was canceled.");
+                    //Debug.LogError("UpdateUserProfileAsync was canceled.");
                     return;
                 }
                 if (task.IsFaulted)
                 {
-                    Debug.LogError("UpdateUserProfileAsync encountered an error: " + task.Exception);
+                    //Debug.LogError("UpdateUserProfileAsync encountered an error: " + task.Exception);
                     return;
                 }
-
                 Debug.Log("User profile updated successfully.");
                 showNotificationMessage("Alert", "Account Successful Created");
 
@@ -365,7 +376,7 @@ public class FirebaseController : MonoBehaviour
         {
             if (task.IsCanceled)
             {
-                Debug.LogError("SendPasswordResetEmailAsync was canceled");
+                //Debug.LogError("SendPasswordResetEmailAsync was canceled");
             }
             if (task.IsFaulted)
             {
