@@ -91,6 +91,7 @@ public class FirebaseController : MonoBehaviour
         singupPanel.SetActive(false);
         profilePanel.SetActive(false);
         forgetPasswordPanel.SetActive(false);
+        CleanValues();
     }
 
     public void OpenSingUpPanel()
@@ -99,6 +100,7 @@ public class FirebaseController : MonoBehaviour
         singupPanel.SetActive(true);
         profilePanel.SetActive(false);
         forgetPasswordPanel.SetActive(false);
+        CleanValues();
     }
 
     public void OpenProfilePanel()
@@ -107,6 +109,7 @@ public class FirebaseController : MonoBehaviour
         singupPanel.SetActive(false);
         profilePanel.SetActive(true);
         forgetPasswordPanel.SetActive(false);
+        CleanValues();
     }
 
     public void OpenForgetPassPanel()
@@ -115,8 +118,19 @@ public class FirebaseController : MonoBehaviour
         singupPanel.SetActive(false);
         profilePanel.SetActive(false);
         forgetPasswordPanel.SetActive(true);
+        CleanValues();
     }
 
+    private void CleanValues()
+    {
+        loginEmail.text = "";
+        loginPassword.text = ""; 
+        singupEmail.text = ""; 
+        singupPassword.text = ""; 
+        singupCPasswprd.text = ""; 
+        singupUsername.text = ""; 
+        forgetPassEmail.text = "";
+    }
     //Inicio de sesion
     public void LoginUser()
     {
