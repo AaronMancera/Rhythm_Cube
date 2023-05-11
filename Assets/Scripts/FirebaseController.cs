@@ -11,6 +11,7 @@ using System;
 using System.Threading.Tasks;
 using Firebase.Extensions;
 using Firebase.Auth;
+using Firebase.Database;
 /*
 Datos de pruebas
 ---------------------
@@ -31,8 +32,11 @@ public class FirebaseController : MonoBehaviour
     //Toggle
     public Toggle remeberMe;
     //Firebase
+    //Firebase Authentication
     Firebase.Auth.FirebaseAuth auth;
     Firebase.Auth.FirebaseUser user;
+    //Firebase RealtimeDatabase
+    Firebase.Database.DatabaseReference reference;
 
     bool IsSingIn = false;
     //Esto es para que cada vez que se inicie de nuevo el juego reinicie estos valores guardados netre sesiones
@@ -216,7 +220,8 @@ public class FirebaseController : MonoBehaviour
             }
 
             // Firebase user has been created.
-            Firebase.Auth.FirebaseUser newUser = task.Result;
+            Firebase.Auth.AuthResult authResult = task.Result;
+            Firebase.Auth.FirebaseUser newUser = authResult.User;
             Debug.LogFormat("Firebase user created successfully: {0} ({1})",
                 newUser.DisplayName, newUser.UserId);
 
@@ -246,7 +251,8 @@ public class FirebaseController : MonoBehaviour
                 return;
             }
 
-            Firebase.Auth.FirebaseUser newUser = task.Result;
+            Firebase.Auth.AuthResult authResult = task.Result;
+            Firebase.Auth.FirebaseUser newUser = authResult.User;
             Debug.LogFormat("User signed in successfully: {0} ({1})",
                 newUser.DisplayName, newUser.UserId);
             //Asignacion de valores para el panel profile
@@ -261,6 +267,8 @@ public class FirebaseController : MonoBehaviour
         auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
         auth.StateChanged += AuthStateChanged;
         AuthStateChanged(this, null);
+        reference = FirebaseDatabase.DefaultInstance.RootReference;
+
     }
 
     void AuthStateChanged(object sender, System.EventArgs eventArgs)
