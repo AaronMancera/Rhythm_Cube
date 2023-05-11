@@ -36,7 +36,7 @@ public class FirebaseController : MonoBehaviour
     Firebase.Auth.FirebaseAuth auth;
     Firebase.Auth.FirebaseUser user;
     //Firebase RealtimeDatabase
-    Firebase.Database.DatabaseReference reference;
+    Firebase.Database.DatabaseReference database;
 
     bool IsSingIn = false;
     //Esto es para que cada vez que se inicie de nuevo el juego reinicie estos valores guardados netre sesiones
@@ -198,6 +198,7 @@ public class FirebaseController : MonoBehaviour
         Siguiendo el getStarted de https://firebase.google.com/docs/auth/unity/start?hl=es-419
     */
     //Creacion de usuario de firebase auth
+    //NOTE: A la hora de crear un usuario, queremos que se cree tanto en Firebas Auth como en nuestra Realtime db
     void CreateUser(string email, string password, string username)
     {
         //se utiliza ContinueWithOnMainThread para que no se generen concurrencias al realizarlo en una rama inferior a la principal
@@ -258,7 +259,7 @@ public class FirebaseController : MonoBehaviour
             //Asignacion de valores para el panel profile
             profileUserName_Text.text = "" + newUser.DisplayName;
             profileEmail_Text.text = "" + newUser.Email;
-            OpenProfilePanel();
+            //OpenProfilePanel();
         });
     }
     //Inicializacion de firebase
@@ -267,7 +268,7 @@ public class FirebaseController : MonoBehaviour
         auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
         auth.StateChanged += AuthStateChanged;
         AuthStateChanged(this, null);
-        reference = FirebaseDatabase.DefaultInstance.RootReference;
+        database = FirebaseDatabase.DefaultInstance.RootReference;
 
     }
 
@@ -319,12 +320,20 @@ public class FirebaseController : MonoBehaviour
                     return;
                 }
                 Debug.Log("User profile updated successfully.");
+                //Inserccion en el RealtimeDatabse
+                writeNewUser(user.UserId, user.DisplayName,user.Email);
                 showNotificationMessage("Alert", "Account Successful Created");
+
 
             });
         }
     }
+    private void writeNewUser(string userId, string name, string email) {
+        User user = new User(name, email);
+        string json = JsonUtility.ToJson(user);
 
+        database.Child("users").Child(userId).SetRawJsonValueAsync(json);
+    }
     private void OnApplicationQuit()
     {
         if (user != null)
