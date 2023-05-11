@@ -69,6 +69,7 @@ public class FirebaseController : MonoBehaviour
 
     // Update is called once per frame
     bool IsSinged = false;
+    //TODO: Meter en la base de datos o en prefabs un valor para guardar el remenber me
     void Update()
     {
         if (IsSingIn)
@@ -259,7 +260,7 @@ public class FirebaseController : MonoBehaviour
             //Asignacion de valores para el panel profile
             profileUserName_Text.text = "" + newUser.DisplayName;
             profileEmail_Text.text = "" + newUser.Email;
-            //OpenProfilePanel();
+            OpenProfilePanel();
         });
     }
     //Inicializacion de firebase
