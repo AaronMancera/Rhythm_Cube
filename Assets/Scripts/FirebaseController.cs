@@ -11,6 +11,7 @@ using System;
 using System.Threading.Tasks;
 using Firebase.Extensions;
 using Firebase.Auth;
+using Firebase.Database;
 /*
 Datos de pruebas
 ---------------------
@@ -31,15 +32,18 @@ public class FirebaseController : MonoBehaviour
     //Toggle
     public Toggle remeberMe;
     //Firebase
+    //Firebase Authentication
     Firebase.Auth.FirebaseAuth auth;
     Firebase.Auth.FirebaseUser user;
+    //Firebase RealtimeDatabase
+    Firebase.Database.DatabaseReference database;
 
     bool IsSingIn = false;
     //Esto es para que cada vez que se inicie de nuevo el juego reinicie estos valores guardados netre sesiones
     private void Awake()
     {
-        PlayerPrefs.DeleteKey("UserName");
-        PlayerPrefs.DeleteKey("UserEmail");
+        //PlayerPrefs.DeleteKey("UserName");
+        //PlayerPrefs.DeleteKey("UserEmail");
     }
     void Start()
     {
@@ -65,6 +69,7 @@ public class FirebaseController : MonoBehaviour
 
     // Update is called once per frame
     bool IsSinged = false;
+    //TODO: Meter en la base de datos o en prefabs un valor para guardar el remenber me
     void Update()
     {
         if (IsSingIn)
@@ -74,6 +79,7 @@ public class FirebaseController : MonoBehaviour
                 Debug.Log("Sesion guardada");
                 IsSinged = true;
                 //Esto guarda estos valores se guardan entre sesiones de juego
+                PlayerPrefs.SetString("UserId", user.UserId);
                 PlayerPrefs.SetString("UserName", user.DisplayName);
                 PlayerPrefs.SetString("UserEmail", user.Email);
                 profileUserName_Text.text = "" + user.DisplayName;
@@ -149,6 +155,9 @@ public class FirebaseController : MonoBehaviour
         auth.SignOut();
         profileUserName_Text.text = "";
         profileEmail_Text.text = "";
+        PlayerPrefs.SetString("UserId", null);
+        PlayerPrefs.SetString("UserName",null);
+        PlayerPrefs.SetString("UserEmail", null);
         OpenLoginPanel();
     }
 
@@ -194,6 +203,7 @@ public class FirebaseController : MonoBehaviour
         Siguiendo el getStarted de https://firebase.google.com/docs/auth/unity/start?hl=es-419
     */
     //Creacion de usuario de firebase auth
+    //NOTE: A la hora de crear un usuario, queremos que se cree tanto en Firebas Auth como en nuestra Realtime db
     void CreateUser(string email, string password, string username)
     {
         //se utiliza ContinueWithOnMainThread para que no se generen concurrencias al realizarlo en una rama inferior a la principal
@@ -216,7 +226,8 @@ public class FirebaseController : MonoBehaviour
             }
 
             // Firebase user has been created.
-            Firebase.Auth.FirebaseUser newUser = task.Result;
+            Firebase.Auth.AuthResult authResult = task.Result;
+            Firebase.Auth.FirebaseUser newUser = authResult.User;
             Debug.LogFormat("Firebase user created successfully: {0} ({1})",
                 newUser.DisplayName, newUser.UserId);
 
@@ -246,7 +257,8 @@ public class FirebaseController : MonoBehaviour
                 return;
             }
 
-            Firebase.Auth.FirebaseUser newUser = task.Result;
+            Firebase.Auth.AuthResult authResult = task.Result;
+            Firebase.Auth.FirebaseUser newUser = authResult.User;
             Debug.LogFormat("User signed in successfully: {0} ({1})",
                 newUser.DisplayName, newUser.UserId);
             //Asignacion de valores para el panel profile
@@ -261,6 +273,8 @@ public class FirebaseController : MonoBehaviour
         auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
         auth.StateChanged += AuthStateChanged;
         AuthStateChanged(this, null);
+        database = FirebaseDatabase.DefaultInstance.RootReference;
+
     }
 
     void AuthStateChanged(object sender, System.EventArgs eventArgs)
@@ -311,12 +325,20 @@ public class FirebaseController : MonoBehaviour
                     return;
                 }
                 Debug.Log("User profile updated successfully.");
+                //Inserccion en el RealtimeDatabse
+                writeNewUser(user.UserId, user.DisplayName,user.Email);
                 showNotificationMessage("Alert", "Account Successful Created");
+
 
             });
         }
     }
+    private void writeNewUser(string userId, string name, string email) {
+        User user = new User(name, email);
+        string json = JsonUtility.ToJson(user);
 
+        database.Child("users").Child(userId).SetRawJsonValueAsync(json);
+    }
     private void OnApplicationQuit()
     {
         if (user != null)
