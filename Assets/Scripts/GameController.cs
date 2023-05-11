@@ -1,3 +1,4 @@
+using Firebase.Database;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -27,6 +28,9 @@ public class GameController : MonoBehaviour
     //bool ha muerto
     private bool dead = false;
     public GameObject prefab; // asigna el prefab en el inspector
+    //Firebase
+    //DataBase
+    Firebase.Database.DatabaseReference database;
 
 
     private void Awake()
@@ -37,6 +41,7 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log(PlayerPrefs.GetString("UserId"));
         //Ponerlo a 60fps
         Application.targetFrameRate = 60;
         audioSource.Play();
@@ -45,7 +50,14 @@ public class GameController : MonoBehaviour
         //TODO: Coger de la base de datos el mejor score
         bestScore = 0;
         InitialText();
+        InitializeFirebase();
     }
+    //Firebase Initial
+    void InitializeFirebase()
+    {
+        database = FirebaseDatabase.DefaultInstance.RootReference;
+    }
+
     void InitialText() 
     {
         usernameText.text=PlayerPrefs.GetString("UserName");
@@ -154,6 +166,11 @@ public class GameController : MonoBehaviour
         {
             bestScore = score;
             bestScoreText.text = bestScore.ToString();
+            //Database realtime actualiza el campo de score_1
+            if (PlayerPrefs.GetString("UserId") != null)
+            {
+                WeiteScoreInDatabase(PlayerPrefs.GetString("Username"), bestScore);
+            }
         }
         time = 0;
         scoreText.text = score.ToString();
@@ -161,6 +178,16 @@ public class GameController : MonoBehaviour
 
         // Reiniciamos el AudioSource
         audioSource.Play();
+    }
+    //Metodo de base de datos apra actualizar el valor del primero score
+    private void WeiteScoreInDatabase(string userId, int score)
+    {
+        database.Child("users").Child(PlayerPrefs.GetString("UserId")).Child("score_1").RunTransaction(mutableData => {
+            // if the data isn't an int or is null, just make it 0
+            // then add the new number of kills
+            mutableData.Value = score;
+            return TransactionResult.Success(mutableData);
+        });
     }
     //Salir al menu
     public void Exit()
@@ -173,6 +200,8 @@ public class GameController : MonoBehaviour
     {
         score = (int)time;
         scoreText.text = score.ToString();
+        //PlayerPrefs.SetFloat("Score_lvl1", score);
+        
     }
     //Metodo que detecta cuando toca un layer End
     private bool IsEnd()

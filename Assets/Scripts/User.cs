@@ -6,7 +6,6 @@ public class User
 {
     public string username;
     public string email;
-    public ArrayList score;
     public User()
     {
 
@@ -15,7 +14,6 @@ public class User
     {
         this.username = username;
         this.email = email;
-        score = new ArrayList();
 
     }
 }

@@ -42,8 +42,8 @@ public class FirebaseController : MonoBehaviour
     //Esto es para que cada vez que se inicie de nuevo el juego reinicie estos valores guardados netre sesiones
     private void Awake()
     {
-        PlayerPrefs.DeleteKey("UserName");
-        PlayerPrefs.DeleteKey("UserEmail");
+        //PlayerPrefs.DeleteKey("UserName");
+        //PlayerPrefs.DeleteKey("UserEmail");
     }
     void Start()
     {
@@ -79,6 +79,7 @@ public class FirebaseController : MonoBehaviour
                 Debug.Log("Sesion guardada");
                 IsSinged = true;
                 //Esto guarda estos valores se guardan entre sesiones de juego
+                PlayerPrefs.SetString("UserId", user.UserId);
                 PlayerPrefs.SetString("UserName", user.DisplayName);
                 PlayerPrefs.SetString("UserEmail", user.Email);
                 profileUserName_Text.text = "" + user.DisplayName;
@@ -154,6 +155,9 @@ public class FirebaseController : MonoBehaviour
         auth.SignOut();
         profileUserName_Text.text = "";
         profileEmail_Text.text = "";
+        PlayerPrefs.SetString("UserId", null);
+        PlayerPrefs.SetString("UserName",null);
+        PlayerPrefs.SetString("UserEmail", null);
         OpenLoginPanel();
     }
 
