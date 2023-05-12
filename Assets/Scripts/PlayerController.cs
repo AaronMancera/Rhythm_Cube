@@ -56,7 +56,6 @@ public class PlayerController : MonoBehaviour
         //Modo volar manteniendo el spacio o pulsando la pantalla
         if (movementMode == 1)
         {
-            Debug.Log("Fly");
             if ((Input.GetKey(KeyCode.Space) || Input.touchCount > 0))
             {
                 rb.AddForce(Vector2.up * flyforce, ForceMode2D.Impulse);
@@ -74,6 +73,7 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+    //TODO: Cada vez que se clona el objeto esta propiedad no esta asignada al boton, por lo tanto buscar como solucionar lo de saltar
     public void jumpClick()
     {
         if (IsGrounded() && movementMode == 0)
@@ -81,7 +81,6 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
     }
-    private void fly() { }
     /*
      * NOTEERROR: Si ponemos el codigo de fixedupdate ne el update el personaje salta demasiadas veces en tan poco tiempo debido al internvalo de ejecucion de update, sin embargo con update el intervalo es fij y siempoire el mismo por lo que no genera ese error
      * Error: si se pulsa muchas veces aun asi sigue saltando el doble
