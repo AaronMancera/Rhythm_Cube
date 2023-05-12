@@ -12,7 +12,7 @@ public class GameController : MonoBehaviour
     //paneles
     public GameObject pausePanel, gamePanel, endingPanel;
     //textos
-    public TMP_Text usernameText, scoreText, bestScoreText;
+    public TMP_Text usernameText, scoreText, bestScoreText, pauseUsernameText, pauseScoreText, pauseBestScoreText, endingUserName, endingScoreText, endingBestScoreText;
     //puntuacion
     public int score, bestScore;
     private float time;
@@ -41,14 +41,14 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log(PlayerPrefs.GetString("UserId"));
-        //Ponerlo a 60fps
+        //Ponerlo a 60fps TODO: Mas adelante configurar desde opciones
         Application.targetFrameRate = 60;
         audioSource.Play();
         Time.timeScale = 1f;
         spawnPlayer = player.transform.position;
         //TODO: Coger de la base de datos el mejor score
-        bestScore = 0;
+        //Inicializa el score de manera local
+       
         InitialText();
         InitializeFirebase();
     }
@@ -58,9 +58,23 @@ public class GameController : MonoBehaviour
         database = FirebaseDatabase.DefaultInstance.RootReference;
     }
 
-    void InitialText() 
+    void InitialText()
     {
-        usernameText.text=PlayerPrefs.GetString("UserName");
+        usernameText.text = PlayerPrefs.GetString("UserName");
+        pauseUsernameText.text = PlayerPrefs.GetString("UserName");
+        endingUserName.text = PlayerPrefs.GetString("UserName");
+        if (PlayerPrefs.GetInt("score_1") != 0)
+        {
+            bestScore = PlayerPrefs.GetInt("score_1");
+            bestScoreText.text = bestScore.ToString();
+            pauseBestScoreText.text = bestScore.ToString();
+            endingScoreText.text = bestScore.ToString();
+        }
+        else
+        {
+            bestScore = 0;
+        }
+
     }
     // Update is called once per frame
     void Update()
@@ -166,11 +180,16 @@ public class GameController : MonoBehaviour
         {
             bestScore = score;
             bestScoreText.text = bestScore.ToString();
+            pauseBestScoreText.text = bestScore.ToString();
+            endingScoreText.text = bestScore.ToString();
+
             //Database realtime actualiza el campo de score_1
             if (PlayerPrefs.GetString("UserId") != null)
             {
-                WeiteScoreInDatabase(PlayerPrefs.GetString("Username"), bestScore);
+                WriteScoreInDatabase(PlayerPrefs.GetString("Username"), bestScore);
             }
+            //Guarda en los datos guardados
+            PlayerPrefs.SetInt("score_1", bestScore);
         }
         time = 0;
         scoreText.text = score.ToString();
@@ -180,9 +199,10 @@ public class GameController : MonoBehaviour
         audioSource.Play();
     }
     //Metodo de base de datos apra actualizar el valor del primero score
-    private void WeiteScoreInDatabase(string userId, int score)
+    private void WriteScoreInDatabase(string userId, int score)
     {
-        database.Child("users").Child(PlayerPrefs.GetString("UserId")).Child("score_1").RunTransaction(mutableData => {
+        database.Child("users").Child(PlayerPrefs.GetString("UserId")).Child("score_1").RunTransaction(mutableData =>
+        {
             // if the data isn't an int or is null, just make it 0
             // then add the new number of kills
             mutableData.Value = score;
@@ -200,8 +220,11 @@ public class GameController : MonoBehaviour
     {
         score = (int)time;
         scoreText.text = score.ToString();
+        pauseScoreText.text = score.ToString();
+        endingScoreText.text = score.ToString();
+
         //PlayerPrefs.SetFloat("Score_lvl1", score);
-        
+
     }
     //Metodo que detecta cuando toca un layer End
     private bool IsEnd()
