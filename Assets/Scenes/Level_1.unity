@@ -3678,6 +3678,12 @@ MonoBehaviour:
   usernameText: {fileID: 1622127147}
   scoreText: {fileID: 365601601}
   bestScoreText: {fileID: 459582686}
+  pauseUsernameText: {fileID: 249514017}
+  pauseScoreText: {fileID: 1150069468}
+  pauseBestScoreText: {fileID: 1917362992}
+  endingUserName: {fileID: 1127316550}
+  endingScoreText: {fileID: 767065668}
+  endingBestScoreText: {fileID: 1110588208}
   score: 0
   bestScore: 0
   boxCollider: {fileID: 846562075}
