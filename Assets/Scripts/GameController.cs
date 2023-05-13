@@ -31,6 +31,9 @@ public class GameController : MonoBehaviour
     //Firebase
     //DataBase
     Firebase.Database.DatabaseReference database;
+    //Auth
+    Firebase.Auth.FirebaseAuth auth;
+
 
 
     private void Awake()
@@ -56,6 +59,7 @@ public class GameController : MonoBehaviour
     void InitializeFirebase()
     {
         database = FirebaseDatabase.DefaultInstance.RootReference;
+        auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
     }
 
     void InitialText()
@@ -184,9 +188,11 @@ public class GameController : MonoBehaviour
             endingScoreText.text = bestScore.ToString();
 
             //Database realtime actualiza el campo de score_1
+            Debug.Log(PlayerPrefs.GetString("UserId"));
+
             if (PlayerPrefs.GetString("UserId") != null)
             {
-                WriteScoreInDatabase(PlayerPrefs.GetString("Username"), bestScore);
+                WriteScoreInDatabase(PlayerPrefs.GetString("UserId"), bestScore);
             }
             //Guarda en los datos guardados
             PlayerPrefs.SetInt("score_1", bestScore);
@@ -201,10 +207,18 @@ public class GameController : MonoBehaviour
     //Metodo de base de datos apra actualizar el valor del primero score
     private void WriteScoreInDatabase(string userId, int score)
     {
-        database.Child("users").Child(PlayerPrefs.GetString("UserId")).Child("score_1").RunTransaction(mutableData =>
+        /*
+        https://tfgrhythmcube-default-rtdb.europe-west1.firebasedatabase.app/
+                                                                             users/
+                                                                                   id/
+                                                                                      score_1
+        */
+        Debug.Log("UserIdDespues: "+userId);
+
+        database.Child("users").Child(userId).Child("score_1").RunTransaction(mutableData =>
         {
             // if the data isn't an int or is null, just make it 0
-            // then add the new number of kills
+
             mutableData.Value = score;
             return TransactionResult.Success(mutableData);
         });
@@ -215,7 +229,7 @@ public class GameController : MonoBehaviour
         SceneManager.LoadScene(0);
     }
     //Puntuacion
-    //TODO: El score debe guardarse en las PlayerPrefs para que se comparta los valores del menu de juego y el menu de pause
+    // El score debe guardarse en las PlayerPrefs para que se comparta los valores del menu de juego y el menu de pause
     private void Score()
     {
         score = (int)time;
@@ -241,4 +255,14 @@ public class GameController : MonoBehaviour
         return raycastHit.collider != null;
     }
 
+    //Cuando se quita la aplicacion esto detecta si le ha dado a recuerdame o no
+    private void OnApplicationQuit()
+    {
+
+        if (PlayerPrefs.GetInt("RemenberMe") == 0)
+        {
+            auth.SignOut();
+        }
+
+    }
 }

@@ -24,9 +24,9 @@ password: demo123
 public class FirebaseController : MonoBehaviour
 {
     //Objetos del canvas
-    public GameObject loginPanel, singupPanel, profilePanel, forgetPasswordPanel, notificationPanel;
+    public GameObject loginPanel, signupPanel, profilePanel, forgetPasswordPanel, notificationPanel;
     //TextField
-    public TMP_InputField loginEmail, loginPassword, singupEmail, singupPassword, singupCPasswprd, singupUsername, forgetPassEmail;
+    public TMP_InputField loginEmail, loginPassword, signupEmail, signupPassword, signupCPasswprd, signupUsername, forgetPassEmail;
     //Text
     public TMP_Text notif_Title_Text, notif_Message_Text, profileUserName_Text, profileEmail_Text;
     //Toggle
@@ -37,8 +37,11 @@ public class FirebaseController : MonoBehaviour
     Firebase.Auth.FirebaseUser user;
     //Firebase RealtimeDatabase
     Firebase.Database.DatabaseReference database;
-
-    bool IsSingIn = false;
+    //LeaderBoard
+    public GameObject scrollViewContent;
+    public GameObject prefabLeaderPlayer;
+    //----------------------------------------------------------------------------------------------------------//
+    bool IsSignIn = false;
     //Esto es para que cada vez que se inicie de nuevo el juego reinicie estos valores guardados netre sesiones
     private void Awake()
     {
@@ -47,7 +50,14 @@ public class FirebaseController : MonoBehaviour
     }
     void Start()
     {
-
+        //Tets Leaderboard
+        for (int i = 0; i < 20; i++)
+        {
+            GameObject newPlayer = (GameObject)Instantiate(prefabLeaderPlayer);
+            newPlayer.transform.SetParent(scrollViewContent.transform);
+            newPlayer.transform.SetPositionAndRotation(new Vector3(0, 0 + i * 5), new Quaternion());
+        }
+        //--
         Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
         {
             var dependencyStatus = task.Result;
@@ -68,24 +78,20 @@ public class FirebaseController : MonoBehaviour
     }
 
     // Update is called once per frame
-    bool IsSinged = false;
-    //TODO: Meter en la base de datos o en prefabs un valor para guardar el remenber me
+    //Meter en la base de datos o en prefabs un valor para guardar el remenber me
     void Update()
     {
-        if (IsSingIn)
+        if (IsSignIn)
         {
-            if (!IsSinged)
-            {
-                Debug.Log("Sesion guardada");
-                IsSinged = true;
-                //Esto guarda estos valores se guardan entre sesiones de juego
-                PlayerPrefs.SetString("UserId", user.UserId);
-                PlayerPrefs.SetString("UserName", user.DisplayName);
-                PlayerPrefs.SetString("UserEmail", user.Email);
-                profileUserName_Text.text = "" + user.DisplayName;
-                profileEmail_Text.text = "" + user.Email;
-                OpenProfilePanel();
-            }
+            //Esto guarda estos valores se guardan entre sesiones de juego
+            PlayerPrefs.SetString("UserId", user.UserId);
+            PlayerPrefs.SetString("UserName", user.DisplayName);
+            PlayerPrefs.SetString("UserEmail", user.Email);
+            profileUserName_Text.text = "" + user.DisplayName;
+            profileEmail_Text.text = "" + user.Email;
+            OpenProfilePanel();
+            //Recargando el valores del databseRealtime 
+
         }
 
 
@@ -94,16 +100,16 @@ public class FirebaseController : MonoBehaviour
     public void OpenLoginPanel()
     {
         loginPanel.SetActive(true);
-        singupPanel.SetActive(false);
+        signupPanel.SetActive(false);
         profilePanel.SetActive(false);
         forgetPasswordPanel.SetActive(false);
         CleanValues();
     }
 
-    public void OpenSingUpPanel()
+    public void OpenSignUpPanel()
     {
         loginPanel.SetActive(false);
-        singupPanel.SetActive(true);
+        signupPanel.SetActive(true);
         profilePanel.SetActive(false);
         forgetPasswordPanel.SetActive(false);
         CleanValues();
@@ -112,7 +118,7 @@ public class FirebaseController : MonoBehaviour
     public void OpenProfilePanel()
     {
         loginPanel.SetActive(false);
-        singupPanel.SetActive(false);
+        signupPanel.SetActive(false);
         profilePanel.SetActive(true);
         forgetPasswordPanel.SetActive(false);
         CleanValues();
@@ -121,7 +127,7 @@ public class FirebaseController : MonoBehaviour
     public void OpenForgetPassPanel()
     {
         loginPanel.SetActive(false);
-        singupPanel.SetActive(false);
+        signupPanel.SetActive(false);
         profilePanel.SetActive(false);
         forgetPasswordPanel.SetActive(true);
         CleanValues();
@@ -130,11 +136,11 @@ public class FirebaseController : MonoBehaviour
     private void CleanValues()
     {
         loginEmail.text = "";
-        loginPassword.text = ""; 
-        singupEmail.text = ""; 
-        singupPassword.text = ""; 
-        singupCPasswprd.text = ""; 
-        singupUsername.text = ""; 
+        loginPassword.text = "";
+        signupEmail.text = "";
+        signupPassword.text = "";
+        signupCPasswprd.text = "";
+        signupUsername.text = "";
         forgetPassEmail.text = "";
     }
     //Inicio de sesion
@@ -145,32 +151,35 @@ public class FirebaseController : MonoBehaviour
             showNotificationMessage("Error", "Fields Empty!\nPlease Input All Details");
             return;
         }
-        //TODO: Hacer el login
-        SingInUser(loginEmail.text, loginPassword.text);
+        // Hacer el login
+        SignInUser(loginEmail.text, loginPassword.text);
+        if (!remeberMe.isOn)
+        {
+            PlayerPrefs.SetInt("RemenberMe", 0);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("RemenberMe", 1);
+        }
     }
     //Cerrar sesion
     public void LogOut()
     {
-        //Cierra la sesion en el sistema
+        //Al salir del auth el observador del auth cambia el panel y resetea los textos y valores
         auth.SignOut();
-        profileUserName_Text.text = "";
-        profileEmail_Text.text = "";
-        PlayerPrefs.SetString("UserId", null);
-        PlayerPrefs.SetString("UserName",null);
-        PlayerPrefs.SetString("UserEmail", null);
-        OpenLoginPanel();
+
     }
 
     //Registro
-    public void SingUpUser()
+    public void SignUpUser()
     {
-        if (string.IsNullOrEmpty(singupEmail.text) && string.IsNullOrEmpty(singupPassword.text) && string.IsNullOrEmpty(singupCPasswprd.text))
+        if (string.IsNullOrEmpty(signupEmail.text) && string.IsNullOrEmpty(signupPassword.text) && string.IsNullOrEmpty(signupCPasswprd.text))
         {
             showNotificationMessage("Error", "Fields Empty!\nPlease Input All Details");
             return;
         }
-        //TODO: Hacer el registro
-        CreateUser(singupEmail.text, singupPassword.text, singupUsername.text);
+        // Hacer el registro
+        CreateUser(signupEmail.text, signupPassword.text, signupUsername.text);
     }
     //Contraseña olvidad
     public void ForgetPass()
@@ -236,7 +245,7 @@ public class FirebaseController : MonoBehaviour
         });
     }
     //Iniciar sesion de usuario de firebase auth
-    void SingInUser(string email, string password)
+    void SignInUser(string email, string password)
     {
         auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWithOnMainThread(task =>
         {
@@ -284,23 +293,29 @@ public class FirebaseController : MonoBehaviour
             bool signedIn = user != auth.CurrentUser && auth.CurrentUser != null;
             if (!signedIn && user != null)
             {
-                Debug.Log("Signed out " + user.UserId);
+                Debug.Log("Signed out ");
+                IsSignIn = false;
+                //Cierra la sesion en el sistema
+                profileUserName_Text.text = "";
+                profileEmail_Text.text = "";
+                remeberMe.isOn = false;
+                PlayerPrefs.DeleteKey("UserId");
+                PlayerPrefs.DeleteKey("UserName");
+                PlayerPrefs.DeleteKey("UserEmail");
+                PlayerPrefs.DeleteKey("score_1");
+                PlayerPrefs.DeleteKey("RemenberMe");
+                OpenLoginPanel();
             }
             user = auth.CurrentUser;
             if (signedIn)
             {
                 Debug.Log("Signed in " + user.UserId);
-                IsSingIn = true;
+                IsSignIn = true;
 
             }
         }
     }
-    //Cuando se cierre la escena
-    void OnDestroy()
-    {
-        auth.StateChanged -= AuthStateChanged;
-        auth = null;
-    }
+
     //Actualizar usuario
     void UpdateUserProfile(string UserName)
     {
@@ -326,28 +341,35 @@ public class FirebaseController : MonoBehaviour
                 }
                 Debug.Log("User profile updated successfully.");
                 //Inserccion en el RealtimeDatabse
-                writeNewUser(user.UserId, user.DisplayName,user.Email);
+                writeNewUser(user.UserId, user.DisplayName, user.Email);
                 showNotificationMessage("Alert", "Account Successful Created");
 
 
             });
         }
     }
-    private void writeNewUser(string userId, string name, string email) {
+    private void writeNewUser(string userId, string name, string email)
+    {
         User user = new User(name, email);
         string json = JsonUtility.ToJson(user);
 
         database.Child("users").Child(userId).SetRawJsonValueAsync(json);
     }
+    //Cuando se cierre la escena
+    void OnDestroy()
+    {
+        auth.StateChanged -= AuthStateChanged;
+        auth = null;
+    }
+    //Cuando se quita la aplicacion esto detecta si le ha dado a recuerdame o no
     private void OnApplicationQuit()
     {
-        if (user != null)
+
+        if (PlayerPrefs.GetInt("RemenberMe") == 0)
         {
-            if (!remeberMe.isOn)
-            {
-                LogOut();
-            }
+            LogOut();
         }
+
     }
     private void GetErrorMessage(Exception exception)
     {

@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour
         }
 
     }
-    //TODO: Cada vez que se clona el objeto esta propiedad no esta asignada al boton, por lo tanto buscar como solucionar lo de saltar
+    //TODO: Cada vez que se clona el objeto esta propiedad no esta asignada al boton, por lo tanto buscar como solucionar lo de saltar y desde windows si salta con el boton y luego con la tecla se aplica doble salto
     public void jumpClick()
     {
         if (IsGrounded() && movementMode == 0)
