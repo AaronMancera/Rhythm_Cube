@@ -78,7 +78,7 @@ public class FirebaseController : MonoBehaviour
     }
 
     // Update is called once per frame
-    //TODO: Meter en la base de datos o en prefabs un valor para guardar el remenber me
+    //Meter en la base de datos o en prefabs un valor para guardar el remenber me
     void Update()
     {
         if (IsSignIn)
@@ -90,6 +90,7 @@ public class FirebaseController : MonoBehaviour
             profileUserName_Text.text = "" + user.DisplayName;
             profileEmail_Text.text = "" + user.Email;
             OpenProfilePanel();
+            //Recargando el valores del databseRealtime 
 
         }
 
@@ -150,7 +151,7 @@ public class FirebaseController : MonoBehaviour
             showNotificationMessage("Error", "Fields Empty!\nPlease Input All Details");
             return;
         }
-        //TODO: Hacer el login
+        // Hacer el login
         SignInUser(loginEmail.text, loginPassword.text);
         if (!remeberMe.isOn)
         {
@@ -177,7 +178,7 @@ public class FirebaseController : MonoBehaviour
             showNotificationMessage("Error", "Fields Empty!\nPlease Input All Details");
             return;
         }
-        //TODO: Hacer el registro
+        // Hacer el registro
         CreateUser(signupEmail.text, signupPassword.text, signupUsername.text);
     }
     //Contraseña olvidad
@@ -297,7 +298,7 @@ public class FirebaseController : MonoBehaviour
                 //Cierra la sesion en el sistema
                 profileUserName_Text.text = "";
                 profileEmail_Text.text = "";
-                remeberMe.isOn=false;
+                remeberMe.isOn = false;
                 PlayerPrefs.DeleteKey("UserId");
                 PlayerPrefs.DeleteKey("UserName");
                 PlayerPrefs.DeleteKey("UserEmail");
@@ -360,7 +361,7 @@ public class FirebaseController : MonoBehaviour
         auth.StateChanged -= AuthStateChanged;
         auth = null;
     }
-    //TODO: Se supone que cuando se quita la aplicacion esto deberia detectar si le ha dado a recuerdame o no
+    //Cuando se quita la aplicacion esto detecta si le ha dado a recuerdame o no
     private void OnApplicationQuit()
     {
 

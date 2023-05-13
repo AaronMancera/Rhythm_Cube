@@ -229,7 +229,7 @@ public class GameController : MonoBehaviour
         SceneManager.LoadScene(0);
     }
     //Puntuacion
-    //TODO: El score debe guardarse en las PlayerPrefs para que se comparta los valores del menu de juego y el menu de pause
+    // El score debe guardarse en las PlayerPrefs para que se comparta los valores del menu de juego y el menu de pause
     private void Score()
     {
         score = (int)time;
@@ -254,6 +254,8 @@ public class GameController : MonoBehaviour
         RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0f, direction, 0.1f, LayerMask.GetMask("DeadZone"));
         return raycastHit.collider != null;
     }
+
+    //Cuando se quita la aplicacion esto detecta si le ha dado a recuerdame o no
     private void OnApplicationQuit()
     {
 

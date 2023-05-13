@@ -1,3 +1,5 @@
+using Firebase.Database;
+using Firebase.Extensions;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -12,6 +14,9 @@ public class LevelSelectorController : MonoBehaviour
     public TMP_Text profileUserName_Text;
     //Nombre de usuario
     private string userName;
+    //Database
+    Firebase.Database.DatabaseReference database;
+
     public void OpenLevelPanel()
     {
         levelPanel.SetActive(true);
@@ -30,24 +35,51 @@ public class LevelSelectorController : MonoBehaviour
     {
         SceneManager.LoadScene(0);
     }
-    public void SelectLevel1() {
+    public void SelectLevel1()
+    {
         SceneManager.LoadScene(1);
     }
 
-    public void OpenLeaderBoardPanel() {
+    public void OpenLeaderBoardPanel()
+    {
         levelPanel.SetActive(false);
         leaderBoardPanel.SetActive(true);
+        Debug.Log("Dentro");
+        LoadUserData();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+    //TODO: Metodo de descargar los datos de todos los jugadores para la LeaderBoard
+    private void LoadUserData()
+    {
+        Debug.Log("Dentro Dentro");
+
+        FirebaseDatabase.DefaultInstance
+            .GetReference("users")
+            .GetValueAsync().ContinueWithOnMainThread(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    // Handle the error...
+                }
+                else if (task.IsCompleted)
+                {
+                    DataSnapshot snapshot = task.Result;
+                    Debug.Log(snapshot.GetRawJsonValue());
+                    // Do something with snapshot...
+                }
+            });
+
+
     }
 }
