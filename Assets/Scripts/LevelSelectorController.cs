@@ -16,6 +16,7 @@ public class LevelSelectorController : MonoBehaviour
     {
         levelPanel.SetActive(true);
         profilePanel.SetActive(false);
+        leaderBoardPanel.SetActive(false);
         //Para que muestre el nombre
         userName = PlayerPrefs.GetString("UserName");
         profileUserName_Text.text = userName;
@@ -34,9 +35,10 @@ public class LevelSelectorController : MonoBehaviour
     }
 
     public void OpenLeaderBoardPanel() {
-        profilePanel.SetActive(false);
-        leaderBoardPanel.SetActive(false);
+        levelPanel.SetActive(false);
+        leaderBoardPanel.SetActive(true);
     }
+
     // Start is called before the first frame update
     void Start()
     {
