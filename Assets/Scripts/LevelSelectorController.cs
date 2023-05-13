@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class LevelSelectorController : MonoBehaviour
 {
     //Objetos del canvas
-    public GameObject profilePanel, levelPanel;
+    public GameObject profilePanel, levelPanel, leaderBoardPanel;
     //Text
     public TMP_Text profileUserName_Text;
     //Nombre de usuario
@@ -32,7 +32,11 @@ public class LevelSelectorController : MonoBehaviour
     public void SelectLevel1() {
         SceneManager.LoadScene(1);
     }
-   
+
+    public void OpenLeaderBoardPanel() {
+        profilePanel.SetActive(false);
+        leaderBoardPanel.SetActive(false);
+    }
     // Start is called before the first frame update
     void Start()
     {
