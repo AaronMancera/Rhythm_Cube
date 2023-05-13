@@ -81,21 +81,12 @@ public class FirebaseController : MonoBehaviour
     //TODO: Meter en la base de datos o en prefabs un valor para guardar el remenber me
     void Update()
     {
-        Debug.Log("Dentro");
-
         if (IsSignIn)
         {
-            Debug.Log("Dentro Dentro");
             //Esto guarda estos valores se guardan entre sesiones de juego
             PlayerPrefs.SetString("UserId", user.UserId);
-            Debug.Log("Hola " + PlayerPrefs.GetString("UserId"));
             PlayerPrefs.SetString("UserName", user.DisplayName);
             PlayerPrefs.SetString("UserEmail", user.Email);
-
-
-            Debug.Log("Dentro Dentro Dentro");
-            Debug.Log("Sesion guardada");
-
             profileUserName_Text.text = "" + user.DisplayName;
             profileEmail_Text.text = "" + user.Email;
             OpenProfilePanel();
@@ -161,19 +152,21 @@ public class FirebaseController : MonoBehaviour
         }
         //TODO: Hacer el login
         SignInUser(loginEmail.text, loginPassword.text);
+        if (!remeberMe.isOn)
+        {
+            PlayerPrefs.SetInt("RemenberMe", 0);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("RemenberMe", 1);
+        }
     }
     //Cerrar sesion
     public void LogOut()
     {
-        //Cierra la sesion en el sistema
+        //Al salir del auth el observador del auth cambia el panel y resetea los textos y valores
         auth.SignOut();
-        profileUserName_Text.text = "";
-        profileEmail_Text.text = "";
-        PlayerPrefs.DeleteKey("UserId");
-        PlayerPrefs.SetString("UserName", null);
-        PlayerPrefs.SetString("UserEmail", null);
-        PlayerPrefs.DeleteKey("score_1");
-        OpenLoginPanel();
+
     }
 
     //Registro
@@ -299,9 +292,18 @@ public class FirebaseController : MonoBehaviour
             bool signedIn = user != auth.CurrentUser && auth.CurrentUser != null;
             if (!signedIn && user != null)
             {
-                Debug.Log("Signed out " + user.UserId);
+                Debug.Log("Signed out ");
                 IsSignIn = false;
-
+                //Cierra la sesion en el sistema
+                profileUserName_Text.text = "";
+                profileEmail_Text.text = "";
+                remeberMe.isOn=false;
+                PlayerPrefs.DeleteKey("UserId");
+                PlayerPrefs.DeleteKey("UserName");
+                PlayerPrefs.DeleteKey("UserEmail");
+                PlayerPrefs.DeleteKey("score_1");
+                PlayerPrefs.DeleteKey("RemenberMe");
+                OpenLoginPanel();
             }
             user = auth.CurrentUser;
             if (signedIn)
@@ -361,13 +363,12 @@ public class FirebaseController : MonoBehaviour
     //TODO: Se supone que cuando se quita la aplicacion esto deberia detectar si le ha dado a recuerdame o no
     private void OnApplicationQuit()
     {
-        if (user != null)
+
+        if (PlayerPrefs.GetInt("RemenberMe") == 0)
         {
-            if (!remeberMe.isOn)
-            {
-                LogOut();
-            }
+            LogOut();
         }
+
     }
     private void GetErrorMessage(Exception exception)
     {

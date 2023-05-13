@@ -31,6 +31,9 @@ public class GameController : MonoBehaviour
     //Firebase
     //DataBase
     Firebase.Database.DatabaseReference database;
+    //Auth
+    Firebase.Auth.FirebaseAuth auth;
+
 
 
     private void Awake()
@@ -56,6 +59,7 @@ public class GameController : MonoBehaviour
     void InitializeFirebase()
     {
         database = FirebaseDatabase.DefaultInstance.RootReference;
+        auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
     }
 
     void InitialText()
@@ -250,5 +254,13 @@ public class GameController : MonoBehaviour
         RaycastHit2D raycastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0f, direction, 0.1f, LayerMask.GetMask("DeadZone"));
         return raycastHit.collider != null;
     }
+    private void OnApplicationQuit()
+    {
 
+        if (PlayerPrefs.GetInt("RemenberMe") == 0)
+        {
+            auth.SignOut();
+        }
+
+    }
 }
