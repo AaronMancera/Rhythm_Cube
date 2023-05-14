@@ -16,7 +16,6 @@ public class LevelSelectorController : MonoBehaviour
     private string userName;
     //Database
     Firebase.Database.DatabaseReference database;
-    List<User> listLeaderBoard;
     //LeaderBoard
     public GameObject scrollViewContent;
     public GameObject prefabLeaderPlayer;
@@ -29,6 +28,16 @@ public class LevelSelectorController : MonoBehaviour
         //Para que muestre el nombre
         userName = PlayerPrefs.GetString("UserName");
         profileUserName_Text.text = userName;
+        //Por si vuelve del leaderboard
+        // Recorrer todos los hijos del objeto
+        for (int i = 0; i < scrollViewContent.transform.childCount; i++)
+        {
+            // Obtener el hijo actual
+            GameObject childObject = scrollViewContent.transform.GetChild(i).gameObject;
+
+            // Destruir el hijo actual
+            Destroy(childObject);
+        }
     }
     public void OpenProfilePanel()
     {
@@ -49,8 +58,9 @@ public class LevelSelectorController : MonoBehaviour
         levelPanel.SetActive(false);
         leaderBoardPanel.SetActive(true);
         Debug.Log("Dentro");
+        List<User> listLeaderBoard;
         listLeaderBoard = new List<User>();
-        LoadUserData();
+        LoadUserDataScore1(listLeaderBoard);
         
     }
 
@@ -66,7 +76,7 @@ public class LevelSelectorController : MonoBehaviour
 
     }
     //TODO: Metodo de descargar los datos de todos los jugadores para la LeaderBoard
-    private void LoadUserData()
+    private void LoadUserDataScore1(List<User> listLeaderBoard)
     {
         Debug.Log("Dentro Dentro");
 
@@ -118,14 +128,14 @@ public class LevelSelectorController : MonoBehaviour
                     }
                     //Invertimos la lista
                     listLeaderBoard.Reverse();
-                    //Tets Leaderboard
                     for (int i = 0; i < listLeaderBoard.Count; i++)
                     {
                         Debug.Log(i + " "+ listLeaderBoard[i].toStringLeaderBoard());
                         GameObject newPlayer = (GameObject)Instantiate(prefabLeaderPlayer);
                         //Note: Tiene que ser un TextMeshProUGUI, o sino dara error y no se ejecutara la parte de abajo del codigo
                         TextMeshProUGUI textMesh = (TextMeshProUGUI)newPlayer.GetComponent<TMP_Text>();
-                        textMesh.text = "Nº"+i+1+" : "+listLeaderBoard[i].toStringLeaderBoard();
+                        int pos = i;
+                        textMesh.text = "Nº"+(pos+1)+" : "+listLeaderBoard[i].toStringLeaderBoard();
 
                         Debug.Log("Hola");
 
