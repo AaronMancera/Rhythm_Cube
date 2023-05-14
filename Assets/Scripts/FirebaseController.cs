@@ -155,8 +155,16 @@ public class FirebaseController : MonoBehaviour
     //Cerrar sesion
     public void LogOut()
     {
-        //Al salir del auth el observador del auth cambia el panel y resetea los textos y valores
-        auth.SignOut();
+        //Importante tener en cuenta el tema del offline
+        if (PlayerPrefs.GetString("UserName") != "Guest")
+        {
+            //Al salir del auth el observador del auth cambia el panel y resetea los textos y valores
+            auth.SignOut();
+        }
+        else {
+            OpenLoginPanel();
+        }
+
 
     }
 
