@@ -161,6 +161,7 @@ public class FirebaseController : MonoBehaviour
             //Al salir del auth el observador del auth cambia el panel y resetea los textos y valores
             auth.SignOut();
         }
+        //Tener en cuenta si es guest que vuelva al panel de login
         else {
             OpenLoginPanel();
         }
