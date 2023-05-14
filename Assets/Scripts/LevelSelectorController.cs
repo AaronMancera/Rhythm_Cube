@@ -71,7 +71,8 @@ public class LevelSelectorController : MonoBehaviour
         Debug.Log("Dentro Dentro");
 
         FirebaseDatabase.DefaultInstance
-            .GetReference("users")
+            //Esto cogera los de puntuacion ordenados menor a mayor (por defecto y no se puede cambiar)
+            .GetReference("users").OrderByChild("score_1")
             .GetValueAsync().ContinueWithOnMainThread(task =>
             {
                 if (task.IsFaulted)
@@ -115,7 +116,8 @@ public class LevelSelectorController : MonoBehaviour
                         //    Debug.Log("Subcampo 2: " + subCampo2);
                         //}
                     }
-
+                    //Invertimos la lista
+                    listLeaderBoard.Reverse();
                     //Tets Leaderboard
                     for (int i = 0; i < listLeaderBoard.Count; i++)
                     {
@@ -123,7 +125,7 @@ public class LevelSelectorController : MonoBehaviour
                         GameObject newPlayer = (GameObject)Instantiate(prefabLeaderPlayer);
                         //Note: Tiene que ser un TextMeshProUGUI, o sino dara error y no se ejecutara la parte de abajo del codigo
                         TextMeshProUGUI textMesh = (TextMeshProUGUI)newPlayer.GetComponent<TMP_Text>();
-                        textMesh.text = listLeaderBoard[i].toStringLeaderBoard();
+                        textMesh.text = "Nº"+i+1+" : "+listLeaderBoard[i].toStringLeaderBoard();
 
                         Debug.Log("Hola");
 
