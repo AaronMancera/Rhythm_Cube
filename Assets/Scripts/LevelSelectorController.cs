@@ -16,6 +16,8 @@ public class LevelSelectorController : MonoBehaviour
     private string userName;
     //Database
     Firebase.Database.DatabaseReference database;
+    Dictionary<string, object> data = new Dictionary<string, object>();
+
 
     public void OpenLevelPanel()
     {
@@ -74,9 +76,22 @@ public class LevelSelectorController : MonoBehaviour
                 }
                 else if (task.IsCompleted)
                 {
+                    data.Clear();
                     DataSnapshot snapshot = task.Result;
                     Debug.Log(snapshot.GetRawJsonValue());
                     // Do something with snapshot...
+                    //Convertimos la recogida en un json
+                    
+
+                    //Converttimos la recogida en un diccionario
+                    //foreach (DataSnapshot childSnapshot in snapshot.Children)
+                    //{
+                    //    data.Add(childSnapshot.Key, childSnapshot.Value);
+                    //    Dictionary<string, object> aux = new Dictionary<string, object>();
+                    //    aux = (Dictionary<string, object>)childSnapshot.Value;
+                        
+                    //}
+             
                 }
             });
 
