@@ -16,8 +16,10 @@ public class LevelSelectorController : MonoBehaviour
     private string userName;
     //Database
     Firebase.Database.DatabaseReference database;
-    Dictionary<string, object> data = new Dictionary<string, object>();
-
+    List<User> listLeaderBoard;
+    //LeaderBoard
+    public GameObject scrollViewContent;
+    public GameObject prefabLeaderPlayer;
 
     public void OpenLevelPanel()
     {
@@ -47,7 +49,9 @@ public class LevelSelectorController : MonoBehaviour
         levelPanel.SetActive(false);
         leaderBoardPanel.SetActive(true);
         Debug.Log("Dentro");
+        listLeaderBoard = new List<User>();
         LoadUserData();
+        
     }
 
     // Start is called before the first frame update
@@ -76,22 +80,58 @@ public class LevelSelectorController : MonoBehaviour
                 }
                 else if (task.IsCompleted)
                 {
-                    data.Clear();
+                    listLeaderBoard.Clear();
                     DataSnapshot snapshot = task.Result;
                     Debug.Log(snapshot.GetRawJsonValue());
-                    // Do something with snapshot...
-                    //Convertimos la recogida en un json
-                    
+                    // Recorrer los hijos del nodo
+                    foreach (DataSnapshot childSnapshot in snapshot.Children)
+                    {
+                        Debug.Log(childSnapshot.GetRawJsonValue());
+                        // Obtener los datos de cada hijo
+                        string campo1 = childSnapshot.Child("email").Value.ToString();
+                        int campo2 = int.Parse(childSnapshot.Child("score_1").Value.ToString());
+                        string campo3 = childSnapshot.Child("username").Value.ToString();
+                        User newUser = new User(campo1, campo2, campo3);
+                        listLeaderBoard.Add(newUser);
+                        // Mostrar los datos en la consola
+                        Debug.Log("Campo 1: " + campo1);
+                        Debug.Log("Campo 2: " + campo2);
+                        Debug.Log("Campo 3: " + campo3);
+                        //
+                        Debug.Log(newUser.toStringLeaderBoard());
 
-                    //Converttimos la recogida en un diccionario
-                    //foreach (DataSnapshot childSnapshot in snapshot.Children)
-                    //{
-                    //    data.Add(childSnapshot.Key, childSnapshot.Value);
-                    //    Dictionary<string, object> aux = new Dictionary<string, object>();
-                    //    aux = (Dictionary<string, object>)childSnapshot.Value;
+                        //// Obtener el subnodo
+                        //DataSnapshot subSnapshot = childSnapshot.Child("SUBNODO");
+
+                        //// Recorrer los hijos del subnodo
+                        //foreach (DataSnapshot subChildSnapshot in subSnapshot.Children)
+                        //{
+                        //    // Obtener los datos de cada hijo del subnodo
+                        //    string subCampo1 = subChildSnapshot.Child("SUB_CAMPO_1").Value.ToString();
+                        //    int subCampo2 = int.Parse(subChildSnapshot.Child("SUB_CAMPO_2").Value.ToString());
+
+                        //    // Mostrar los datos en la consola
+                        //    Debug.Log("Subcampo 1: " + subCampo1);
+                        //    Debug.Log("Subcampo 2: " + subCampo2);
+                        //}
+                    }
+
+                    //Tets Leaderboard
+                    for (int i = 0; i < listLeaderBoard.Count; i++)
+                    {
+                        Debug.Log(i + " "+ listLeaderBoard[i].toStringLeaderBoard());
+                        GameObject newPlayer = (GameObject)Instantiate(prefabLeaderPlayer);
+                        //Note: Tiene que ser un TextMeshProUGUI, o sino dara error y no se ejecutara la parte de abajo del codigo
+                        TextMeshProUGUI textMesh = (TextMeshProUGUI)newPlayer.GetComponent<TMP_Text>();
+                        textMesh.text = listLeaderBoard[i].toStringLeaderBoard();
+
+                        Debug.Log("Hola");
+
+                        newPlayer.transform.SetParent(scrollViewContent.transform);
+                        newPlayer.transform.SetPositionAndRotation(new Vector3(0, 0 + i * 5), new Quaternion());
                         
-                    //}
-             
+                    }
+                    //--
                 }
             });
 
