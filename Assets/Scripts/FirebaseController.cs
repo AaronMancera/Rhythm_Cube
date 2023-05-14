@@ -37,9 +37,7 @@ public class FirebaseController : MonoBehaviour
     Firebase.Auth.FirebaseUser user;
     //Firebase RealtimeDatabase
     Firebase.Database.DatabaseReference database;
-    //LeaderBoard
-    public GameObject scrollViewContent;
-    public GameObject prefabLeaderPlayer;
+
     //----------------------------------------------------------------------------------------------------------//
     bool IsSignIn = false;
     //Esto es para que cada vez que se inicie de nuevo el juego reinicie estos valores guardados netre sesiones
@@ -50,14 +48,6 @@ public class FirebaseController : MonoBehaviour
     }
     void Start()
     {
-        //Tets Leaderboard
-        for (int i = 0; i < 20; i++)
-        {
-            GameObject newPlayer = (GameObject)Instantiate(prefabLeaderPlayer);
-            newPlayer.transform.SetParent(scrollViewContent.transform);
-            newPlayer.transform.SetPositionAndRotation(new Vector3(0, 0 + i * 5), new Quaternion());
-        }
-        //--
         Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
         {
             var dependencyStatus = task.Result;
@@ -165,8 +155,16 @@ public class FirebaseController : MonoBehaviour
     //Cerrar sesion
     public void LogOut()
     {
-        //Al salir del auth el observador del auth cambia el panel y resetea los textos y valores
-        auth.SignOut();
+        //Importante tener en cuenta el tema del offline
+        if (PlayerPrefs.GetString("UserName") != "Guest")
+        {
+            //Al salir del auth el observador del auth cambia el panel y resetea los textos y valores
+            auth.SignOut();
+        }
+        else {
+            OpenLoginPanel();
+        }
+
 
     }
 
@@ -286,6 +284,7 @@ public class FirebaseController : MonoBehaviour
 
     }
 
+    //Metodo observer de auth
     void AuthStateChanged(object sender, System.EventArgs eventArgs)
     {
         if (auth.CurrentUser != user)
