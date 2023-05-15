@@ -41,8 +41,12 @@ public class GameController : MonoBehaviour
     {
         //metodo que buscara en la escena automaticamente el objeto cameracontroller
         cameraController = FindObjectOfType<CameraController>();
+        //Coger los datos de la base de datos
         //Nada maz aparecer que recoga primero el best score
-        InitialBestRecord();
+        if (PlayerPrefs.GetString("UserName") != "Guest")
+        {
+            InitialBestRecord();
+        }
 
 
     }
@@ -54,12 +58,10 @@ public class GameController : MonoBehaviour
         audioSource.Play();
         Time.timeScale = 1f;
         spawnPlayer = player.transform.position;
-        //Coger los datos de la base de datos
-        Debug.Log(PlayerPrefs.GetString("UserId"));
         //Inicializa el score de manera local       
         InitialText();
         InitializeFirebase();
-       
+
 
     }
     //Firebase Initial
@@ -91,7 +93,7 @@ public class GameController : MonoBehaviour
         }
 
     }
-    void InitialBestRecord() 
+    void InitialBestRecord()
     {
         FirebaseDatabase.DefaultInstance
            //Esto cogera los de puntuacion ordenados menor a mayor (por defecto y no se puede cambiar)
@@ -100,8 +102,8 @@ public class GameController : MonoBehaviour
            {
                if (task.IsFaulted)
                {
-                    // Handle the error...
-                }
+                   // Handle the error...
+               }
                else if (task.IsCompleted)
                {
                    DataSnapshot snapshot = task.Result;
@@ -218,6 +220,7 @@ public class GameController : MonoBehaviour
         player = nuevoObjeto;
         boxCollider = player.GetComponent<BoxCollider2D>();
         dead = false;
+        //Asignacion del best score
         if (score > bestScore)
         {
             bestScore = score;
@@ -226,9 +229,7 @@ public class GameController : MonoBehaviour
             endingScoreText.text = bestScore.ToString();
 
             //Database realtime actualiza el campo de score_1
-            Debug.Log(PlayerPrefs.GetString("UserId"));
-
-            if (PlayerPrefs.GetString("UserId") != null)
+            if (PlayerPrefs.GetString("UserId") != null && PlayerPrefs.GetString("UserName") !="Guest")
             {
                 WriteScoreInDatabase(PlayerPrefs.GetString("UserId"), bestScore);
             }
@@ -251,7 +252,7 @@ public class GameController : MonoBehaviour
                                                                                    id/
                                                                                       score_1
         */
-        Debug.Log("UserIdDespues: "+userId);
+        Debug.Log("UserIdDespues: " + userId);
 
         database.Child("users").Child(userId).Child("score_1").RunTransaction(mutableData =>
         {
