@@ -16,6 +16,7 @@ public class OfflineController : MonoBehaviour
     }
     public void PlayLikeGuest()
     {
+        PlayerPrefs.DeleteKey("UserId");
         PlayerPrefs.SetString("UserName", "Guest");
         PlayerPrefs.SetString("UserEmail", "Guest");
         profileUserName_Text.text = "Guest";
