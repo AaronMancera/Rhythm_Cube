@@ -1,4 +1,5 @@
 using Firebase.Database;
+using Firebase.Extensions;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -40,6 +41,10 @@ public class GameController : MonoBehaviour
     {
         //metodo que buscara en la escena automaticamente el objeto cameracontroller
         cameraController = FindObjectOfType<CameraController>();
+        //Nada maz aparecer que recoga primero el best score
+        InitialBestRecord();
+
+
     }
     // Start is called before the first frame update
     void Start()
@@ -49,11 +54,13 @@ public class GameController : MonoBehaviour
         audioSource.Play();
         Time.timeScale = 1f;
         spawnPlayer = player.transform.position;
-        //TODO: Coger de la base de datos el mejor score
-        //Inicializa el score de manera local
-       
+        //Coger los datos de la base de datos
+        Debug.Log(PlayerPrefs.GetString("UserId"));
+        //Inicializa el score de manera local       
         InitialText();
         InitializeFirebase();
+       
+
     }
     //Firebase Initial
     void InitializeFirebase()
@@ -67,9 +74,11 @@ public class GameController : MonoBehaviour
         usernameText.text = PlayerPrefs.GetString("UserName");
         pauseUsernameText.text = PlayerPrefs.GetString("UserName");
         endingUserName.text = PlayerPrefs.GetString("UserName");
+        //Si se ha sobreescrito se pone en todos los textos
         if (PlayerPrefs.GetInt("score_1") != 0)
         {
             bestScore = PlayerPrefs.GetInt("score_1");
+
             bestScoreText.text = bestScore.ToString();
             pauseBestScoreText.text = bestScore.ToString();
             endingScoreText.text = bestScore.ToString();
@@ -77,8 +86,37 @@ public class GameController : MonoBehaviour
         else
         {
             bestScore = 0;
+
+
         }
 
+    }
+    void InitialBestRecord() 
+    {
+        FirebaseDatabase.DefaultInstance
+           //Esto cogera los de puntuacion ordenados menor a mayor (por defecto y no se puede cambiar)
+           .GetReference("users").Child(PlayerPrefs.GetString("UserId"))
+           .GetValueAsync().ContinueWithOnMainThread(task =>
+           {
+               if (task.IsFaulted)
+               {
+                    // Handle the error...
+                }
+               else if (task.IsCompleted)
+               {
+                   DataSnapshot snapshot = task.Result;
+                   //Debug.Log(snapshot.GetRawJsonValue());
+                   var dictionary = snapshot.Value as Dictionary<string, object>;
+                   if (dictionary != null)
+                   {
+                       bestScore = int.Parse(dictionary["score_1"].ToString());
+                       PlayerPrefs.SetInt("score_1", bestScore);
+
+
+
+                   }
+               }
+           });
     }
     // Update is called once per frame
     void Update()

@@ -67,7 +67,7 @@ public class LevelSelectorController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+       
     }
 
     // Update is called once per frame
@@ -78,7 +78,6 @@ public class LevelSelectorController : MonoBehaviour
     //TODO: Metodo de descargar los datos de todos los jugadores para la LeaderBoard
     private void LoadUserDataScore1(List<User> listLeaderBoard)
     {
-        Debug.Log("Dentro Dentro");
 
         FirebaseDatabase.DefaultInstance
             //Esto cogera los de puntuacion ordenados menor a mayor (por defecto y no se puede cambiar)
