@@ -24,11 +24,16 @@ password: demo123
 public class FirebaseController : MonoBehaviour
 {
     //Objetos del canvas
-    public GameObject loginPanel, signupPanel, profilePanel, forgetPasswordPanel, notificationPanel;
+    [Header("Panel")]
+    public GameObject loginPanel, signupPanel, profilePanel, forgetPasswordPanel, notificationPanel, optionsPanel;
+    [Header("Input")]
     //TextField
     public TMP_InputField loginEmail, loginPassword, signupEmail, signupPassword, signupCPasswprd, signupUsername, forgetPassEmail;
+    [Header("Text")]
     //Text
     public TMP_Text notif_Title_Text, notif_Message_Text, profileUserName_Text, profileEmail_Text;
+    [Header("Toggle")]
+
     //Toggle
     public Toggle remeberMe;
     //Firebase
@@ -122,6 +127,16 @@ public class FirebaseController : MonoBehaviour
         forgetPasswordPanel.SetActive(true);
         CleanValues();
     }
+    public void OpenOptionsPanel()
+    {
+        optionsPanel.SetActive(true);
+
+    }
+    public void CloseOptionsPanel()
+    {
+        optionsPanel.SetActive(false);
+
+    }
 
     private void CleanValues()
     {
@@ -162,7 +177,8 @@ public class FirebaseController : MonoBehaviour
             auth.SignOut();
         }
         //Tener en cuenta si es guest que vuelva al panel de login
-        else {
+        else
+        {
             OpenLoginPanel();
         }
 

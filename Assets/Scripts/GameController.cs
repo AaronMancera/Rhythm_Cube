@@ -9,25 +9,32 @@ using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour
 {
     //audio
+    [Header("Audio")]
     public AudioSource audioSource;
     //paneles
-    public GameObject pausePanel, gamePanel, endingPanel;
+    [Header("Panel")]
+    public GameObject pausePanel, gamePanel, endingPanel, optionsPanel;
     //textos
+    [Header("Text")]
     public TMP_Text usernameText, scoreText, bestScoreText, pauseUsernameText, pauseScoreText, pauseBestScoreText, endingUserName, endingScoreText, endingBestScoreText;
     //puntuacion
+    [Header("Score")]
     public int score, bestScore;
     private float time;
     //bool fin del jego
+    [Header("Ending")]
     private bool end = false;
     public BoxCollider2D boxCollider;
     public GameObject player;
     private Vector3 spawnPlayer;
-
     //este es el script de camra que desde el game controller vamos a realizar un metodo
+    [Header("Camera")]
     public CameraController cameraController;
     private float endTime;
+    [Header("Dead")]
     //bool ha muerto
     private bool dead = false;
+    [Header("Respawn")]
     public GameObject prefab; // asigna el prefab en el inspector
     //Firebase
     //DataBase
@@ -123,9 +130,8 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //TODO: Poner una configuracion para el volumen
-        //establecer el volumen
-        audioSource.volume = 0.5f;
+        //establecer el volumen Note: Se encarga el settingsMenu de esto
+        //audioSource.volume = 0.5f;
         if (GameObject.FindGameObjectWithTag("Player") != null)
         {
             //End
@@ -192,6 +198,16 @@ public class GameController : MonoBehaviour
         gamePanel.SetActive(true);
         audioSource.Play();
         Time.timeScale = 1f;
+    }
+    public void OpenOptionsPanel()
+    {
+        optionsPanel.SetActive(true);
+
+    }
+    public void CloseOptionsPanel()
+    {
+        optionsPanel.SetActive(false);
+
     }
     //Resetear el nivel
     public void Reset()
