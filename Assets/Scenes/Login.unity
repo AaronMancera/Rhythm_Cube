@@ -4892,7 +4892,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -7402,7 +7402,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: dad
+  m_text: Offline
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -11721,6 +11721,7 @@ MonoBehaviour:
   levelPanel: {fileID: 1826126304}
   leaderBoardPanel: {fileID: 1767688432}
   profileUserName_Text: {fileID: 463067433}
+  leaderboardUserName_Text: {fileID: 728401795}
   scrollViewContent: {fileID: 1977321131}
   prefabLeaderPlayer: {fileID: 4864770981794654650, guid: bbda8fde17603974ea7cb87588a804b0, type: 3}
 --- !u!4 &1275824110
