@@ -56,7 +56,14 @@ public class GameController : MonoBehaviour
         {
             InitialBestRecord();
         }
-
+        //Si la aplicacion se esta ejecutando en widnows entonces se deshabilita la opcion de saltar pulsando la pantalla
+        //Note: En ordenador no se puede volar pulsando la pantalla
+        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            // Código para Windows
+            GameObject gameObject = jumpButton.gameObject;
+            gameObject.SetActive(false);
+        }
 
     }
     // Start is called before the first frame update
@@ -234,8 +241,14 @@ public class GameController : MonoBehaviour
         // Creamos una nueva instancia del objeto en la posición de reaparición
         GameObject nuevoObjeto = Instantiate(prefab, spawnPlayer, Quaternion.identity);
         //al reaparecer le asignamos al boton del ui la funcion de saltar
-        PlayerController playerController = nuevoObjeto.GetComponent<PlayerController>();
-        jumpButton.onClick.AddListener(playerController.jumpClick);
+        //Si la aplicacion esta ejecutandose en el movil entonces poner el el click de saltar en el boton
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            // Código para Android
+            PlayerController playerController = nuevoObjeto.GetComponent<PlayerController>();
+            jumpButton.onClick.AddListener(playerController.jumpClick);
+        }
+       
 
         // Asignamos el nuevo objeto a la variable para poder eliminarlo en el futuro
 
