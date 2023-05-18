@@ -218,6 +218,14 @@ public class GameController : MonoBehaviour
         optionsPanel.SetActive(false);
 
     }
+    //NOTE: Si el reset se hace con el mismo algoritmo que el abajo, no se cierra el menu de pause y no se inicia hasta que le demos continue
+    public void ResetButton() {
+        Resume();
+        Destroy(player);
+        audioSource.Stop();
+        // Esperamos 3 segundos
+        Invoke("ReaparecerJugador", 0f);
+    }
     //Resetear el nivel
     public void Reset()
     {
@@ -231,7 +239,7 @@ public class GameController : MonoBehaviour
         //Cuando muera eliminara el game object y esperara 5 segundos con la musica pausada para respaunear otro jugador
         Destroy(player);
         audioSource.Stop();
-        // Esperamos 5 segundos
+        // Esperamos 3 segundos
         Invoke("ReaparecerJugador", 3f);
 
 
