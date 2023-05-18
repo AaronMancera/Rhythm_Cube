@@ -26,9 +26,18 @@ public class SettingsMenu : MonoBehaviour
     {
         Screen.fullScreen = isFullScreen;
     }
-    public void SetResolution(int resolutionIndex) {
+    public void SetResolution(int resolutionIndex)
+    {
         Resolution resolution = resolutions[resolutionIndex];
-        Screen.SetResolution(resolution.width,resolution.height,Screen.fullScreen);
+        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+    }
+    public void Exit()
+    {
+    #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+    #else
+        Application.Quit();
+    #endif   
     }
     // Start is called before the first frame update
     void Start()
@@ -42,11 +51,13 @@ public class SettingsMenu : MonoBehaviour
         //Sirve para saber que reolucion esta activada actualmente
         int currentResolutionIndex = 0;
 
-        for (int i = 0; i < resolutions.Length; i++) {
+        for (int i = 0; i < resolutions.Length; i++)
+        {
             string option = resolutions[i].width + " x " + resolutions[i].height;
             options.Add(option);
             //Asigna cual es el currente index
-            if (resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height) {
+            if (resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height)
+            {
                 currentResolutionIndex = i;
             }
         }
