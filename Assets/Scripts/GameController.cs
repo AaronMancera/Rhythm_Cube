@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
@@ -36,6 +37,7 @@ public class GameController : MonoBehaviour
     private bool dead = false;
     [Header("Respawn")]
     public GameObject prefab; // asigna el prefab en el inspector
+    public Button jumpButton;
     //Firebase
     //DataBase
     Firebase.Database.DatabaseReference database;
@@ -231,6 +233,10 @@ public class GameController : MonoBehaviour
     {
         // Creamos una nueva instancia del objeto en la posición de reaparición
         GameObject nuevoObjeto = Instantiate(prefab, spawnPlayer, Quaternion.identity);
+        //al reaparecer le asignamos al boton del ui la funcion de saltar
+        PlayerController playerController = nuevoObjeto.GetComponent<PlayerController>();
+        jumpButton.onClick.AddListener(playerController.jumpClick);
+
         // Asignamos el nuevo objeto a la variable para poder eliminarlo en el futuro
 
         player = nuevoObjeto;
