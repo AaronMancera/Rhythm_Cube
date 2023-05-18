@@ -11,7 +11,7 @@ public class LevelSelectorController : MonoBehaviour
     //Objetos del canvas
     public GameObject profilePanel, levelPanel, leaderBoardPanel;
     //Text
-    public TMP_Text profileUserName_Text;
+    public TMP_Text profileUserName_Text, leaderboardUserName_Text;
     //Nombre de usuario
     private string userName;
     //Database
@@ -57,17 +57,16 @@ public class LevelSelectorController : MonoBehaviour
     {
         levelPanel.SetActive(false);
         leaderBoardPanel.SetActive(true);
-        Debug.Log("Dentro");
         List<User> listLeaderBoard;
         listLeaderBoard = new List<User>();
         LoadUserDataScore1(listLeaderBoard);
-        
+
     }
 
     // Start is called before the first frame update
     void Start()
     {
-       
+
     }
 
     // Update is called once per frame
@@ -78,12 +77,12 @@ public class LevelSelectorController : MonoBehaviour
     //TODO: Metodo de descargar los datos de todos los jugadores para la LeaderBoard
     private void LoadUserDataScore1(List<User> listLeaderBoard)
     {
-
         FirebaseDatabase.DefaultInstance
             //Esto cogera los de puntuacion ordenados menor a mayor (por defecto y no se puede cambiar)
             .GetReference("users").OrderByChild("score_1")
             .GetValueAsync().ContinueWithOnMainThread(task =>
             {
+                //Si entra como guest, simplemente sera capturado aqui el error
                 if (task.IsFaulted)
                 {
                     // Handle the error...
@@ -92,59 +91,43 @@ public class LevelSelectorController : MonoBehaviour
                 {
                     listLeaderBoard.Clear();
                     DataSnapshot snapshot = task.Result;
-                    Debug.Log(snapshot.GetRawJsonValue());
+                    //Debug.Log(snapshot.GetRawJsonValue());
                     // Recorrer los hijos del nodo
                     foreach (DataSnapshot childSnapshot in snapshot.Children)
                     {
-                        Debug.Log(childSnapshot.GetRawJsonValue());
+                        //Debug.Log(childSnapshot.GetRawJsonValue());
                         // Obtener los datos de cada hijo
                         string campo1 = childSnapshot.Child("email").Value.ToString();
                         int campo2 = int.Parse(childSnapshot.Child("score_1").Value.ToString());
-                        string campo3 = childSnapshot.Child("username").Value.ToString();
-                        User newUser = new User(campo1, campo2, campo3);
+                        string campo5 = childSnapshot.Child("username").Value.ToString();
+                        //NOTE: campo1 - email _ campo2 - score_1 _ campo3 - score_2 _ campo4 - score_3 _ campo5 - username
+                        User newUser = new User(campo1, campo2, 0, 0, campo5);
                         listLeaderBoard.Add(newUser);
-                        // Mostrar los datos en la consola
-                        Debug.Log("Campo 1: " + campo1);
-                        Debug.Log("Campo 2: " + campo2);
-                        Debug.Log("Campo 3: " + campo3);
-                        //
-                        Debug.Log(newUser.toStringLeaderBoard());
 
-                        //// Obtener el subnodo
-                        //DataSnapshot subSnapshot = childSnapshot.Child("SUBNODO");
-
-                        //// Recorrer los hijos del subnodo
-                        //foreach (DataSnapshot subChildSnapshot in subSnapshot.Children)
-                        //{
-                        //    // Obtener los datos de cada hijo del subnodo
-                        //    string subCampo1 = subChildSnapshot.Child("SUB_CAMPO_1").Value.ToString();
-                        //    int subCampo2 = int.Parse(subChildSnapshot.Child("SUB_CAMPO_2").Value.ToString());
-
-                        //    // Mostrar los datos en la consola
-                        //    Debug.Log("Subcampo 1: " + subCampo1);
-                        //    Debug.Log("Subcampo 2: " + subCampo2);
-                        //}
                     }
                     //Invertimos la lista
                     listLeaderBoard.Reverse();
                     for (int i = 0; i < listLeaderBoard.Count; i++)
                     {
-                        Debug.Log(i + " "+ listLeaderBoard[i].toStringLeaderBoard());
+                        //Debug.Log(i + " " + listLeaderBoard[i].toStringLeaderBoard());
                         GameObject newPlayer = (GameObject)Instantiate(prefabLeaderPlayer);
                         //Note: Tiene que ser un TextMeshProUGUI, o sino dara error y no se ejecutara la parte de abajo del codigo
                         TextMeshProUGUI textMesh = (TextMeshProUGUI)newPlayer.GetComponent<TMP_Text>();
                         int pos = i;
-                        textMesh.text = "Nº"+(pos+1)+" : "+listLeaderBoard[i].toStringLeaderBoard();
-
-                        Debug.Log("Hola");
-
+                        textMesh.text = "Nº" + (pos + 1) + " : " + listLeaderBoard[i].toStringLeaderBoard();
                         newPlayer.transform.SetParent(scrollViewContent.transform);
                         newPlayer.transform.SetPositionAndRotation(new Vector3(0, 0 + i * 5), new Quaternion());
-                        
+                        if (listLeaderBoard[i].getUsername() == PlayerPrefs.GetString("UserName"))
+                        {
+
+                            leaderboardUserName_Text.text = "Nº" + (pos + 1) + " : " + listLeaderBoard[i].toStringLeaderBoard();
+
+                        }
                     }
                     //--
                 }
             });
+
 
 
     }

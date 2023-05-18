@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.UI;
 
 public class SettingsMenu : MonoBehaviour
 {
+    [Header("Este es el slider de sonido")]
+    public Slider slidersound;
     [Header("Este es el mezclador de audio")]
     public AudioMixer audioMixer;
 
@@ -14,6 +17,7 @@ public class SettingsMenu : MonoBehaviour
     public void SetVolume(float volume)
     {
         audioMixer.SetFloat("volume", volume);
+        PlayerPrefs.SetFloat("volume", volume);
     }
     // 0 - veary low _ 1 - low _ 2 - medium  _ 3 - high
     public void SetQuality(int qualityIndex)
@@ -42,6 +46,9 @@ public class SettingsMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log(PlayerPrefs.GetFloat("volume"));
+        audioMixer.SetFloat("volume", PlayerPrefs.GetFloat("volume"));
+        slidersound.value = PlayerPrefs.GetFloat("volume");
         resolutions = Screen.resolutions;
 
         resolutionDropdown.ClearOptions();
