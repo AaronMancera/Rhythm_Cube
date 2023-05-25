@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour
     //fuerza de vuelo
     public float flyforce;
     private float timeToFall = 0;
+    //Animator
+    private Animator animator;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +26,10 @@ public class PlayerController : MonoBehaviour
         //Se inicializa
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
+        //Animcaciones
+        //NOTE: Ya podemos hacerder a los parametros de nuestro animetor asignado en el player
+        animator = GetComponent<Animator>();
+
     }
 
     // Update is called once per frame
@@ -91,6 +97,9 @@ public class PlayerController : MonoBehaviour
      */
     private void FixedUpdate()
     {
+        animator.SetBool("isGrounded", IsGrounded());
+        animator.SetBool("isFly", IsFly());
+
 
     }
     // Función para detectar si el cubo está tocando el suelo
