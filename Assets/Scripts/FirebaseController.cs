@@ -319,6 +319,7 @@ public class FirebaseController : MonoBehaviour
                 PlayerPrefs.DeleteKey("UserName");
                 PlayerPrefs.DeleteKey("UserEmail");
                 PlayerPrefs.DeleteKey("score_1");
+                //Quitar el score del nivel 2 y 3
                 PlayerPrefs.DeleteKey("RemenberMe");
                 OpenLoginPanel();
             }

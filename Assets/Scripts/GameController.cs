@@ -277,7 +277,8 @@ public class GameController : MonoBehaviour
             endingScoreText.text = bestScore.ToString();
 
             //Database realtime actualiza el campo de score_1
-            if (PlayerPrefs.GetString("UserId") != null && PlayerPrefs.GetString("UserName") !="Guest")
+            //Todas las previsiones posibles para que no haya fallos en la subida
+            if (PlayerPrefs.GetString("UserId") != null && PlayerPrefs.GetString("UserName") !="Guest" && auth != null)
             {
                 WriteScoreInDatabase(PlayerPrefs.GetString("UserId"), bestScore);
             }
@@ -300,7 +301,6 @@ public class GameController : MonoBehaviour
                                                                                    id/
                                                                                       score_1
         */
-        Debug.Log("UserIdDespues: " + userId);
 
         database.Child("users").Child(userId).Child("score_1").RunTransaction(mutableData =>
         {
