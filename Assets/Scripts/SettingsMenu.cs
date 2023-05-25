@@ -46,7 +46,7 @@ public class SettingsMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log(PlayerPrefs.GetFloat("volume"));
+        //Debug.Log(PlayerPrefs.GetFloat("volume"));
         audioMixer.SetFloat("volume", PlayerPrefs.GetFloat("volume"));
         slidersound.value = PlayerPrefs.GetFloat("volume");
         resolutions = Screen.resolutions;
