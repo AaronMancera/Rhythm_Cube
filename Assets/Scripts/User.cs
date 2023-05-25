@@ -7,7 +7,7 @@ public class User
     public string username;
     public string email;
     //para la leaderboard
-    public int score_1, score_2, score_3;
+    public int score_1=0, score_2=0, score_3=0;
 
     public User()
     {

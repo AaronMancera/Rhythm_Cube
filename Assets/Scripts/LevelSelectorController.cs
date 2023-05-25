@@ -101,6 +101,7 @@ public class LevelSelectorController : MonoBehaviour
                         int campo2 = int.Parse(childSnapshot.Child("score_1").Value.ToString());
                         string campo5 = childSnapshot.Child("username").Value.ToString();
                         //NOTE: campo1 - email _ campo2 - score_1 _ campo3 - score_2 _ campo4 - score_3 _ campo5 - username
+                        //Recoger el score del 2 y el 3
                         User newUser = new User(campo1, campo2, 0, 0, campo5);
                         listLeaderBoard.Add(newUser);
 

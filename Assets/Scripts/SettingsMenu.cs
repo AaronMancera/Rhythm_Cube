@@ -14,6 +14,9 @@ public class SettingsMenu : MonoBehaviour
     [Header("Configuracion de resolucion")]
     public TMPro.TMP_Dropdown resolutionDropdown;
     Resolution[] resolutions;
+    [Header("Parametros para quitar si se ejecuta en android")]
+    public TMPro.TMP_Text fullscreenText;
+    public Toggle fullscreenToggle;
     public void SetVolume(float volume)
     {
         audioMixer.SetFloat("volume", volume);
@@ -46,6 +49,12 @@ public class SettingsMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Si la aplicacion se ejecuta en android, no queremos dejar ver las opciones de fullscreen y de las resoluciones
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            GameObject gameObjectResolution = resolutionDropdown.gameObject;
+            gameObjectResolution.SetActive(false);
+        }
         //Debug.Log(PlayerPrefs.GetFloat("volume"));
         audioMixer.SetFloat("volume", PlayerPrefs.GetFloat("volume"));
         slidersound.value = PlayerPrefs.GetFloat("volume");
