@@ -50,12 +50,6 @@ public class GameController : MonoBehaviour
     {
         //metodo que buscara en la escena automaticamente el objeto cameracontroller
         cameraController = FindObjectOfType<CameraController>();
-        //Coger los datos de la base de datos
-        //Nada maz aparecer que recoga primero el best score
-        if (PlayerPrefs.GetString("UserName") != "Guest")
-        {
-            InitialBestRecord();
-        }
         //Si la aplicacion se esta ejecutando en widnows entonces se deshabilita la opcion de saltar pulsando la pantalla
         //Note: En ordenador no se puede volar pulsando la pantalla
         if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
@@ -69,6 +63,12 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Coger los datos de la base de datos
+        //Nada maz aparecer que recoga primero el best score
+        if (PlayerPrefs.GetString("UserName") != "Guest")
+        {
+            InitialBestRecord();
+        }
         //Ponerlo a 60fps TODO: Mas adelante configurar desde opciones
         Application.targetFrameRate = 60;
         audioSource.Play();
@@ -111,6 +111,7 @@ public class GameController : MonoBehaviour
     }
     void InitialBestRecord()
     {
+        Debug.Log("Hola");
         FirebaseDatabase.DefaultInstance
            //Esto cogera los de puntuacion ordenados menor a mayor (por defecto y no se puede cambiar)
            .GetReference("users").Child(PlayerPrefs.GetString("UserId"))
@@ -122,14 +123,18 @@ public class GameController : MonoBehaviour
                }
                else if (task.IsCompleted)
                {
+                   Debug.Log("Hola2");
+
                    DataSnapshot snapshot = task.Result;
                    //Debug.Log(snapshot.GetRawJsonValue());
                    var dictionary = snapshot.Value as Dictionary<string, object>;
                    if (dictionary != null)
                    {
                        bestScore = int.Parse(dictionary["score_1"].ToString());
+                       Debug.Log(bestScore);
                        PlayerPrefs.SetInt("score_1", bestScore);
-
+                       InitialText();
+                       Debug.Log("Hola3");
 
 
                    }
