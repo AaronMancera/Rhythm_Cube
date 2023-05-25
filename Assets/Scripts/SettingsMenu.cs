@@ -54,6 +54,10 @@ public class SettingsMenu : MonoBehaviour
         {
             GameObject gameObjectResolution = resolutionDropdown.gameObject;
             gameObjectResolution.SetActive(false);
+            GameObject gameObjectFullscreen = fullscreenText.gameObject;
+            gameObjectFullscreen.SetActive(false);
+            GameObject gameObjectToggle = fullscreenToggle.gameObject;
+            gameObjectToggle.SetActive(false);
         }
         //Debug.Log(PlayerPrefs.GetFloat("volume"));
         audioMixer.SetFloat("volume", PlayerPrefs.GetFloat("volume"));
