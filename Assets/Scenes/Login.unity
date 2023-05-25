@@ -18334,6 +18334,8 @@ MonoBehaviour:
   slidersound: {fileID: 635215165}
   audioMixer: {fileID: 24100000, guid: 7cf20b92127a21546a19f4c0bb4234de, type: 2}
   resolutionDropdown: {fileID: 1974946668}
+  fullscreenText: {fileID: 103715420}
+  fullscreenToggle: {fileID: 29363763}
 --- !u!4 &2062946739
 Transform:
   m_ObjectHideFlags: 0
