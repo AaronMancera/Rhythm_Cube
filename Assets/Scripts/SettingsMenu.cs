@@ -60,7 +60,7 @@ public class SettingsMenu : MonoBehaviour
         //Si ha sido guardado el valor en los player pref se asigna automaticamente
         QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("quality"));
         qualityDropdown.value = PlayerPrefs.GetInt("quality");
-        CloseCredits();
+        
     }
     // Start is called before the first frame update
     void Start()
