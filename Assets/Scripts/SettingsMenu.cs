@@ -19,7 +19,8 @@ public class SettingsMenu : MonoBehaviour
     public Toggle fullscreenToggle;
     [Header("Configuracion de calidad")]
     public TMPro.TMP_Dropdown qualityDropdown;
-
+    [Header("Configuracion de creditos")]
+    public GameObject creditsPanel;
     public void SetVolume(float volume)
     {
         audioMixer.SetFloat("volume", volume);
@@ -48,11 +49,18 @@ public class SettingsMenu : MonoBehaviour
         Application.Quit();
     #endif   
     }
+    public void OpenCredits() {
+        creditsPanel.SetActive(true);
+    }
+    public void CloseCredits() {
+        creditsPanel.SetActive(false);
+    }
     private void Awake()
     {
         //Si ha sido guardado el valor en los player pref se asigna automaticamente
         QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("quality"));
         qualityDropdown.value = PlayerPrefs.GetInt("quality");
+        CloseCredits();
     }
     // Start is called before the first frame update
     void Start()
