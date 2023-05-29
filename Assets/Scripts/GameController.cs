@@ -99,19 +99,16 @@ public class GameController : MonoBehaviour
 
             bestScoreText.text = bestScore.ToString();
             pauseBestScoreText.text = bestScore.ToString();
-            endingScoreText.text = bestScore.ToString();
+            endingBestScoreText.text = bestScore.ToString();
         }
         else
         {
             bestScore = 0;
-
-
         }
 
     }
     void InitialBestRecord()
     {
-        Debug.Log("Hola");
         FirebaseDatabase.DefaultInstance
            //Esto cogera los de puntuacion ordenados menor a mayor (por defecto y no se puede cambiar)
            .GetReference("users").Child(PlayerPrefs.GetString("UserId"))
@@ -123,7 +120,6 @@ public class GameController : MonoBehaviour
                }
                else if (task.IsCompleted)
                {
-                   Debug.Log("Hola2");
 
                    DataSnapshot snapshot = task.Result;
                    //Debug.Log(snapshot.GetRawJsonValue());
@@ -134,7 +130,6 @@ public class GameController : MonoBehaviour
                        Debug.Log(bestScore);
                        PlayerPrefs.SetInt("score_1", bestScore);
                        InitialText();
-                       Debug.Log("Hola3");
 
 
                    }
@@ -161,11 +156,27 @@ public class GameController : MonoBehaviour
                     pausePanel.SetActive(false);
                     gamePanel.SetActive(false);
                     player.SetActive(false);
+                    endingBestScoreText.text = score.ToString();
+
+                    //Asignacion del best score
+                    if (score > bestScore)
+                    {
+                        bestScore = score;
+
+                        //Database realtime actualiza el campo de score_1
+                        //Todas las previsiones posibles para que no haya fallos en la subida
+                        if (PlayerPrefs.GetString("UserId") != null && PlayerPrefs.GetString("UserName") != "Guest" && auth != null)
+                        {
+                            WriteScoreInDatabase(PlayerPrefs.GetString("UserId"), bestScore);
+                        }
+                        //Guarda en los datos guardados
+                        PlayerPrefs.SetInt("score_1", bestScore);
+                    }
+
                 }
                 else
                 {
                     endTime += Time.deltaTime;
-                    Debug.Log(endTime);
                 }
             }
             //trigger
@@ -287,6 +298,7 @@ public class GameController : MonoBehaviour
         }
         time = 0;
         scoreText.text = score.ToString();
+        endingBestScoreText.text= score.ToString();
 
 
         // Reiniciamos el AudioSource
