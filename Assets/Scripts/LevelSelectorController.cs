@@ -74,7 +74,7 @@ public class LevelSelectorController : MonoBehaviour
     {
 
     }
-    //TODO: Metodo de descargar los datos de todos los jugadores para la LeaderBoard
+    //Metodo de descargar los datos de todos los jugadores para la LeaderBoard
     private void LoadUserDataScore1(List<User> listLeaderBoard)
     {
         FirebaseDatabase.DefaultInstance
