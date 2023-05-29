@@ -9671,6 +9671,8 @@ MonoBehaviour:
   slidersound: {fileID: 1178925520}
   audioMixer: {fileID: 24100000, guid: 7cf20b92127a21546a19f4c0bb4234de, type: 2}
   resolutionDropdown: {fileID: 1004495398}
+  fullscreenText: {fileID: 507155869}
+  fullscreenToggle: {fileID: 766294945}
 --- !u!1001 &828214496
 PrefabInstance:
   m_ObjectHideFlags: 0
