@@ -18336,6 +18336,7 @@ MonoBehaviour:
   resolutionDropdown: {fileID: 1974946668}
   fullscreenText: {fileID: 103715420}
   fullscreenToggle: {fileID: 29363763}
+  qualityDropdown: {fileID: 1597795875}
 --- !u!4 &2062946739
 Transform:
   m_ObjectHideFlags: 0

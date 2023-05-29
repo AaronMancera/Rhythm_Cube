@@ -17,6 +17,9 @@ public class SettingsMenu : MonoBehaviour
     [Header("Parametros para quitar si se ejecuta en android")]
     public TMPro.TMP_Text fullscreenText;
     public Toggle fullscreenToggle;
+    [Header("Configuracion de calidad")]
+    public TMPro.TMP_Dropdown qualityDropdown;
+
     public void SetVolume(float volume)
     {
         audioMixer.SetFloat("volume", volume);
@@ -25,9 +28,8 @@ public class SettingsMenu : MonoBehaviour
     // 0 - veary low _ 1 - low _ 2 - medium  _ 3 - high
     public void SetQuality(int qualityIndex)
     {
-
+        PlayerPrefs.SetInt("quality", qualityIndex);
         QualitySettings.SetQualityLevel(qualityIndex);
-        Debug.Log(QualitySettings.GetQualitySettings().ToString());
     }
     public void SetFullScreen(bool isFullScreen)
     {
@@ -45,6 +47,12 @@ public class SettingsMenu : MonoBehaviour
     #else
         Application.Quit();
     #endif   
+    }
+    private void Awake()
+    {
+        //Si ha sido guardado el valor en los player pref se asigna automaticamente
+        QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("quality"));
+        qualityDropdown.value = PlayerPrefs.GetInt("quality");
     }
     // Start is called before the first frame update
     void Start()
