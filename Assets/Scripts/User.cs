@@ -24,7 +24,7 @@ public class User
         this.email = email;
         this.score_1 = score_1;
         this.score_2 = score_2;
-        this.score_2 = score_3;
+        this.score_3 = score_3;
         this.username = username;
 
     }
