@@ -332,6 +332,11 @@ public class GameController : MonoBehaviour
     private void Score()
     {
         score = (int)time;
+        //Normalizacion
+        Debug.Log(score);
+        Debug.Log(score/75f);
+
+        score = (int)(score / 75f * 100f);
         scoreText.text = score.ToString();
         pauseScoreText.text = score.ToString();
         endingScoreText.text = score.ToString();
