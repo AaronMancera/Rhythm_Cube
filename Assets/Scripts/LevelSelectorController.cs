@@ -95,9 +95,15 @@ public class LevelSelectorController : MonoBehaviour
                     // Recorrer los hijos del nodo
                     foreach (DataSnapshot childSnapshot in snapshot.Children)
                     {
-                        Debug.Log(childSnapshot.GetRawJsonValue());
+                        //Debug.Log(childSnapshot.GetRawJsonValue());
                         // Obtener los datos de cada hijo
                         string campo1 = childSnapshot.Child("email").Value.ToString();
+                        //NOTA: Metodo para dar la facilidad de implementacion de nuevos niveles
+                        //int campoNuevo = 0;
+                        //if (childSnapshot.HasChild("score_x"))
+                        //{
+                        //    campoNuevo = int.Parse(childSnapshot.Child("score_x").Value.ToString());
+                        //}
                         int campo2 = 0;
                         if (childSnapshot.HasChild("score_1"))
                         {
