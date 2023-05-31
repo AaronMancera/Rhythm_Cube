@@ -9,6 +9,8 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
+    [Header("Nivel")]
+    public string nivel;
     //audio
     [Header("Audio")]
     public AudioSource audioSource;
@@ -235,7 +237,8 @@ public class GameController : MonoBehaviour
 
     }
     //NOTE: Si el reset se hace con el mismo algoritmo que el abajo, no se cierra el menu de pause y no se inicia hasta que le demos continue
-    public void ResetButton() {
+    public void ResetButton()
+    {
         Resume();
         Destroy(player);
         audioSource.Stop();
@@ -272,7 +275,7 @@ public class GameController : MonoBehaviour
             PlayerController playerController = nuevoObjeto.GetComponent<PlayerController>();
             jumpButton.onClick.AddListener(playerController.jumpClick);
         }
-       
+
 
         // Asignamos el nuevo objeto a la variable para poder eliminarlo en el futuro
 
@@ -289,7 +292,7 @@ public class GameController : MonoBehaviour
 
             //Database realtime actualiza el campo de score_1
             //Todas las previsiones posibles para que no haya fallos en la subida
-            if (PlayerPrefs.GetString("UserId") != null && PlayerPrefs.GetString("UserName") !="Guest" && auth != null)
+            if (PlayerPrefs.GetString("UserId") != null && PlayerPrefs.GetString("UserName") != "Guest" && auth != null)
             {
                 WriteScoreInDatabase(PlayerPrefs.GetString("UserId"), bestScore);
             }
@@ -298,7 +301,7 @@ public class GameController : MonoBehaviour
         }
         time = 0;
         scoreText.text = score.ToString();
-        endingBestScoreText.text= score.ToString();
+        endingBestScoreText.text = score.ToString();
 
 
         // Reiniciamos el AudioSource
@@ -333,7 +336,14 @@ public class GameController : MonoBehaviour
     {
         score = (int)time;
         //Normalizacion a 100
-        score = (int)(score / 75f * 100f);
+        if (nivel == "level_1")
+        {
+            score = (int)(score / 75f * 100f);
+        }
+        else if (nivel == "level_2") {
+            score = (int)(score / 102f * 100f);
+
+        }
         scoreText.text = score.ToString();
         pauseScoreText.text = score.ToString();
         endingScoreText.text = score.ToString();
