@@ -98,11 +98,25 @@ public class LevelSelectorController : MonoBehaviour
                         Debug.Log(childSnapshot.GetRawJsonValue());
                         // Obtener los datos de cada hijo
                         string campo1 = childSnapshot.Child("email").Value.ToString();
-                        int campo2 = int.Parse(childSnapshot.Child("score_1").Value.ToString());
+                        int campo2 = 0;
+                        if (childSnapshot.HasChild("score_1"))
+                        {
+                            campo2 = int.Parse(childSnapshot.Child("score_1").Value.ToString());
+                        }
+                        int campo3 = 0;
+                        if (childSnapshot.HasChild("score_2"))
+                        {
+                           campo3 = int.Parse(childSnapshot.Child("score_2").Value.ToString());
+                        }
+                        int campo4 = 0;
+                        if (childSnapshot.HasChild("score_3"))
+                        {
+                            campo4 = int.Parse(childSnapshot.Child("score_3").Value.ToString());
+                        }
                         string campo5 = childSnapshot.Child("username").Value.ToString();
                         //NOTE: campo1 - email _ campo2 - score_1 _ campo3 - score_2 _ campo4 - score_3 _ campo5 - username
                         //Recoger el score del 2 y el 3
-                        User newUser = new User(campo1, campo2, 0, 0, campo5);
+                        User newUser = new User(campo1, campo2, campo3, campo4, campo5);
                         listLeaderBoard.Add(newUser);
 
                     }
