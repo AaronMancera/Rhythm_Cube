@@ -2810,7 +2810,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8077373000594555119, guid: 178c06bd0ead68a49848bfda1c89f52f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.71
+      value: -0.236
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 178c06bd0ead68a49848bfda1c89f52f, type: 3}
@@ -8444,6 +8444,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a45da8abfa9800499797e6da4553e28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nivel: 
   audioSource: {fileID: 193529181}
   pausePanel: {fileID: 1512362793}
   gamePanel: {fileID: 900875935}
@@ -11380,7 +11381,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8077373000594555119, guid: 178c06bd0ead68a49848bfda1c89f52f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.644
+      value: -0.069
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 178c06bd0ead68a49848bfda1c89f52f, type: 3}
