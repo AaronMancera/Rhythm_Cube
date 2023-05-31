@@ -8444,7 +8444,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a45da8abfa9800499797e6da4553e28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nivel: 
+  nivel: level_1
   audioSource: {fileID: 193529181}
   pausePanel: {fileID: 1512362793}
   gamePanel: {fileID: 900875935}

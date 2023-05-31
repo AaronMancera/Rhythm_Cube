@@ -95,18 +95,39 @@ public class GameController : MonoBehaviour
         pauseUsernameText.text = PlayerPrefs.GetString("UserName");
         endingUserName.text = PlayerPrefs.GetString("UserName");
         //Si se ha sobreescrito se pone en todos los textos
-        if (PlayerPrefs.GetInt("score_1") != 0)
+        if (nivel == "level_1")
         {
-            bestScore = PlayerPrefs.GetInt("score_1");
+            if (PlayerPrefs.GetInt("score_1") != 0)
+            {
+                bestScore = PlayerPrefs.GetInt("score_1");
 
-            bestScoreText.text = bestScore.ToString();
-            pauseBestScoreText.text = bestScore.ToString();
-            endingBestScoreText.text = bestScore.ToString();
+                bestScoreText.text = bestScore.ToString();
+                pauseBestScoreText.text = bestScore.ToString();
+                endingBestScoreText.text = bestScore.ToString();
+            }
+            else
+            {
+                bestScore = 0;
+            }
         }
-        else
+        else if (nivel == "level_2")
+
+
         {
-            bestScore = 0;
+            if (PlayerPrefs.GetInt("score_2") != 0)
+            {
+                bestScore = PlayerPrefs.GetInt("score_2");
+
+                bestScoreText.text = bestScore.ToString();
+                pauseBestScoreText.text = bestScore.ToString();
+                endingBestScoreText.text = bestScore.ToString();
+            }
+            else
+            {
+                bestScore = 0;
+            }
         }
+
 
     }
     void InitialBestRecord()
@@ -125,15 +146,31 @@ public class GameController : MonoBehaviour
 
                    DataSnapshot snapshot = task.Result;
                    //Debug.Log(snapshot.GetRawJsonValue());
-                   var dictionary = snapshot.Value as Dictionary<string, object>;
-                   if (dictionary != null)
+                   //TODO: Hacer un condicional para cada nivel de la base de datos
+                   if (snapshot.HasChild("score_1"))
                    {
-                       bestScore = int.Parse(dictionary["score_1"].ToString());
-                       Debug.Log(bestScore);
-                       PlayerPrefs.SetInt("score_1", bestScore);
-                       InitialText();
+                       var dictionary = snapshot.Value as Dictionary<string, object>;
+                       if (dictionary != null)
+                       {
+                           bestScore = int.Parse(dictionary["score_1"].ToString());
+                           Debug.Log(bestScore);
+                           PlayerPrefs.SetInt("score_1", bestScore);
+                           InitialText();
 
 
+                       }
+                   } else if (snapshot.HasChild("score_2"))
+                   {
+                       var dictionary = snapshot.Value as Dictionary<string, object>;
+                       if (dictionary != null)
+                       {
+                           bestScore = int.Parse(dictionary["score_2"].ToString());
+                           Debug.Log(bestScore);
+                           PlayerPrefs.SetInt("score_2", bestScore);
+                           InitialText();
+
+
+                       }
                    }
                }
            });
@@ -171,8 +208,14 @@ public class GameController : MonoBehaviour
                         {
                             WriteScoreInDatabase(PlayerPrefs.GetString("UserId"), bestScore);
                         }
-                        //Guarda en los datos guardados
-                        PlayerPrefs.SetInt("score_1", bestScore);
+                        //NOTE: Guarda en los datos guardados en cada nivel
+                        if (nivel == "level_1")
+                        {
+                            PlayerPrefs.SetInt("score_1", bestScore);
+                        } else if (nivel == "level_2")
+                        {
+                            PlayerPrefs.SetInt("score_2", bestScore);
+                        }
                     }
 
                 }
@@ -316,14 +359,27 @@ public class GameController : MonoBehaviour
                                                                                    id/
                                                                                       score_1
         */
-
-        database.Child("users").Child(userId).Child("score_1").RunTransaction(mutableData =>
+        //NOTE: Por cada nivel hay que hacer una peticion diferente
+        if (nivel == "level_1")
         {
+            database.Child("users").Child(userId).Child("score_1").RunTransaction(mutableData =>
+            {
             // if the data isn't an int or is null, just make it 0
 
             mutableData.Value = score;
-            return TransactionResult.Success(mutableData);
-        });
+                return TransactionResult.Success(mutableData);
+            });
+        }
+        else if (nivel == "level_2")
+        {
+            database.Child("users").Child(userId).Child("score_2").RunTransaction(mutableData =>
+            {
+                // if the data isn't an int or is null, just make it 0
+
+                mutableData.Value = score;
+                return TransactionResult.Success(mutableData);
+            });
+        }
     }
     //Salir al menu
     public void Exit()
@@ -340,7 +396,8 @@ public class GameController : MonoBehaviour
         {
             score = (int)(score / 75f * 100f);
         }
-        else if (nivel == "level_2") {
+        else if (nivel == "level_2")
+        {
             score = (int)(score / 102f * 100f);
 
         }
