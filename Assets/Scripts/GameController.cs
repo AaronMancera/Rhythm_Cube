@@ -65,12 +65,6 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Coger los datos de la base de datos
-        //Nada maz aparecer que recoga primero el best score
-        //if (PlayerPrefs.GetString("UserName") != "Guest")
-        //{
-        //    InitialBestRecord();
-        //}
         //Ponerlo a 60fps TODO: Mas adelante configurar desde opciones
         Application.targetFrameRate = 60;
         audioSource.Play();
@@ -130,51 +124,7 @@ public class GameController : MonoBehaviour
 
 
     }
-    //void InitialBestRecord()
-    //{
-    //    FirebaseDatabase.DefaultInstance
-    //       //Esto cogera los de puntuacion ordenados menor a mayor (por defecto y no se puede cambiar)
-    //       .GetReference("users").Child(PlayerPrefs.GetString("UserId"))
-    //       .GetValueAsync().ContinueWithOnMainThread(task =>
-    //       {
-    //           if (task.IsFaulted)
-    //           {
-    //               // Handle the error...
-    //           }
-    //           else if (task.IsCompleted)
-    //           {
 
-    //               DataSnapshot snapshot = task.Result;
-    //               //Debug.Log(snapshot.GetRawJsonValue());
-    //               //TODO: Hacer un condicional para cada nivel de la base de datos
-    //               if (snapshot.HasChild("score_1"))
-    //               {
-    //                   var dictionary = snapshot.Value as Dictionary<string, object>;
-    //                   if (dictionary != null)
-    //                   {
-    //                       bestScore = int.Parse(dictionary["score_1"].ToString());
-    //                       Debug.Log(bestScore);
-    //                       PlayerPrefs.SetInt("score_1", bestScore);
-    //                       InitialText();
-
-
-    //                   }
-    //               } else if (snapshot.HasChild("score_2"))
-    //               {
-    //                   var dictionary = snapshot.Value as Dictionary<string, object>;
-    //                   if (dictionary != null)
-    //                   {
-    //                       bestScore = int.Parse(dictionary["score_2"].ToString());
-    //                       Debug.Log(bestScore);
-    //                       PlayerPrefs.SetInt("score_2", bestScore);
-    //                       InitialText();
-
-
-    //                   }
-    //               }
-    //           }
-    //       });
-    //}
     // Update is called once per frame
     void Update()
     {
@@ -212,7 +162,8 @@ public class GameController : MonoBehaviour
                         if (nivel == "level_1")
                         {
                             PlayerPrefs.SetInt("score_1", bestScore);
-                        } else if (nivel == "level_2")
+                        }
+                        else if (nivel == "level_2")
                         {
                             PlayerPrefs.SetInt("score_2", bestScore);
                         }
@@ -310,6 +261,7 @@ public class GameController : MonoBehaviour
     {
         // Creamos una nueva instancia del objeto en la posición de reaparición
         GameObject nuevoObjeto = Instantiate(prefab, spawnPlayer, Quaternion.identity);
+
         //al reaparecer le asignamos al boton del ui la funcion de saltar
         //Si la aplicacion esta ejecutandose en el movil entonces poner el el click de saltar en el boton
         if (Application.platform == RuntimePlatform.Android)
@@ -324,6 +276,15 @@ public class GameController : MonoBehaviour
 
         player = nuevoObjeto;
         boxCollider = player.GetComponent<BoxCollider2D>();
+        if (nivel == "level_2")
+        {
+            player.GetComponent<PlayerController>().moveSpeed += 1;
+
+        }
+        else if (nivel == "level_3")
+        {
+            player.GetComponent<PlayerController>().moveSpeed += 2;
+        }
         dead = false;
         //Asignacion del best score
         if (score > bestScore)
@@ -364,9 +325,9 @@ public class GameController : MonoBehaviour
         {
             database.Child("users").Child(userId).Child("score_1").RunTransaction(mutableData =>
             {
-            // if the data isn't an int or is null, just make it 0
+                // if the data isn't an int or is null, just make it 0
 
-            mutableData.Value = score;
+                mutableData.Value = score;
                 return TransactionResult.Success(mutableData);
             });
         }
