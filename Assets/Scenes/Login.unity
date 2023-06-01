@@ -11469,11 +11469,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loginPanel: {fileID: 807606815}
   profilePanel: {fileID: 574896991}
-  notificatonPanel: {fileID: 0}
+  notificatonPanel: {fileID: 1742986077}
   profileUserName_Text: {fileID: 193617587}
   profileEmail_Text: {fileID: 1269661538}
-  notif_Title_Text: {fileID: 0}
-  notif_Message_Text: {fileID: 0}
+  notif_Title_Text: {fileID: 1165105395}
+  notif_Message_Text: {fileID: 592682894}
 --- !u!4 &1153351206
 Transform:
   m_ObjectHideFlags: 0
