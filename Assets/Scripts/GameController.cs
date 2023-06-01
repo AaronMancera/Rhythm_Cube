@@ -362,6 +362,10 @@ public class GameController : MonoBehaviour
             score = (int)(score / 77f * 100f);
 
         }
+        else if (nivel == "level_3")
+        {
+            score = (int)(score / 69f * 100f);
+        }
         scoreText.text = score.ToString();
         pauseScoreText.text = score.ToString();
         endingScoreText.text = score.ToString();
