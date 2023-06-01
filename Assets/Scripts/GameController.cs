@@ -398,7 +398,7 @@ public class GameController : MonoBehaviour
         }
         else if (nivel == "level_2")
         {
-            score = (int)(score / 102f * 100f);
+            score = (int)(score / 77f * 100f);
 
         }
         scoreText.text = score.ToString();
