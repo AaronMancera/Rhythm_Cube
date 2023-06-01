@@ -67,10 +67,10 @@ public class GameController : MonoBehaviour
     {
         //Coger los datos de la base de datos
         //Nada maz aparecer que recoga primero el best score
-        if (PlayerPrefs.GetString("UserName") != "Guest")
-        {
-            InitialBestRecord();
-        }
+        //if (PlayerPrefs.GetString("UserName") != "Guest")
+        //{
+        //    InitialBestRecord();
+        //}
         //Ponerlo a 60fps TODO: Mas adelante configurar desde opciones
         Application.targetFrameRate = 60;
         audioSource.Play();
@@ -100,6 +100,7 @@ public class GameController : MonoBehaviour
             if (PlayerPrefs.GetInt("score_1") != 0)
             {
                 bestScore = PlayerPrefs.GetInt("score_1");
+                Debug.Log("Nivel 1:" + bestScore);
 
                 bestScoreText.text = bestScore.ToString();
                 pauseBestScoreText.text = bestScore.ToString();
@@ -111,12 +112,11 @@ public class GameController : MonoBehaviour
             }
         }
         else if (nivel == "level_2")
-
-
         {
             if (PlayerPrefs.GetInt("score_2") != 0)
             {
                 bestScore = PlayerPrefs.GetInt("score_2");
+                Debug.Log("Nivel 2:" + bestScore);
 
                 bestScoreText.text = bestScore.ToString();
                 pauseBestScoreText.text = bestScore.ToString();
@@ -130,51 +130,51 @@ public class GameController : MonoBehaviour
 
 
     }
-    void InitialBestRecord()
-    {
-        FirebaseDatabase.DefaultInstance
-           //Esto cogera los de puntuacion ordenados menor a mayor (por defecto y no se puede cambiar)
-           .GetReference("users").Child(PlayerPrefs.GetString("UserId"))
-           .GetValueAsync().ContinueWithOnMainThread(task =>
-           {
-               if (task.IsFaulted)
-               {
-                   // Handle the error...
-               }
-               else if (task.IsCompleted)
-               {
+    //void InitialBestRecord()
+    //{
+    //    FirebaseDatabase.DefaultInstance
+    //       //Esto cogera los de puntuacion ordenados menor a mayor (por defecto y no se puede cambiar)
+    //       .GetReference("users").Child(PlayerPrefs.GetString("UserId"))
+    //       .GetValueAsync().ContinueWithOnMainThread(task =>
+    //       {
+    //           if (task.IsFaulted)
+    //           {
+    //               // Handle the error...
+    //           }
+    //           else if (task.IsCompleted)
+    //           {
 
-                   DataSnapshot snapshot = task.Result;
-                   //Debug.Log(snapshot.GetRawJsonValue());
-                   //TODO: Hacer un condicional para cada nivel de la base de datos
-                   if (snapshot.HasChild("score_1"))
-                   {
-                       var dictionary = snapshot.Value as Dictionary<string, object>;
-                       if (dictionary != null)
-                       {
-                           bestScore = int.Parse(dictionary["score_1"].ToString());
-                           Debug.Log(bestScore);
-                           PlayerPrefs.SetInt("score_1", bestScore);
-                           InitialText();
-
-
-                       }
-                   } else if (snapshot.HasChild("score_2"))
-                   {
-                       var dictionary = snapshot.Value as Dictionary<string, object>;
-                       if (dictionary != null)
-                       {
-                           bestScore = int.Parse(dictionary["score_2"].ToString());
-                           Debug.Log(bestScore);
-                           PlayerPrefs.SetInt("score_2", bestScore);
-                           InitialText();
+    //               DataSnapshot snapshot = task.Result;
+    //               //Debug.Log(snapshot.GetRawJsonValue());
+    //               //TODO: Hacer un condicional para cada nivel de la base de datos
+    //               if (snapshot.HasChild("score_1"))
+    //               {
+    //                   var dictionary = snapshot.Value as Dictionary<string, object>;
+    //                   if (dictionary != null)
+    //                   {
+    //                       bestScore = int.Parse(dictionary["score_1"].ToString());
+    //                       Debug.Log(bestScore);
+    //                       PlayerPrefs.SetInt("score_1", bestScore);
+    //                       InitialText();
 
 
-                       }
-                   }
-               }
-           });
-    }
+    //                   }
+    //               } else if (snapshot.HasChild("score_2"))
+    //               {
+    //                   var dictionary = snapshot.Value as Dictionary<string, object>;
+    //                   if (dictionary != null)
+    //                   {
+    //                       bestScore = int.Parse(dictionary["score_2"].ToString());
+    //                       Debug.Log(bestScore);
+    //                       PlayerPrefs.SetInt("score_2", bestScore);
+    //                       InitialText();
+
+
+    //                   }
+    //               }
+    //           }
+    //       });
+    //}
     // Update is called once per frame
     void Update()
     {

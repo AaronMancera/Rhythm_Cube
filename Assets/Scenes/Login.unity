@@ -1279,7 +1279,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 72146055}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1275824109}
+        m_TargetAssemblyTypeName: LevelSelectorController, Assembly-CSharp
+        m_MethodName: SelectLevel2
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &72146055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3575,7 +3587,7 @@ RectTransform:
   m_Children:
   - {fileID: 1961021584}
   m_Father: {fileID: 310430914}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -3716,11 +3728,11 @@ RectTransform:
   - {fileID: 57936111}
   - {fileID: 153240299}
   - {fileID: 574896992}
-  - {fileID: 1742986078}
   - {fileID: 1826126305}
   - {fileID: 1767688433}
   - {fileID: 289323830}
   - {fileID: 2111874915}
+  - {fileID: 1742986078}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -13066,10 +13078,13 @@ MonoBehaviour:
   profilePanel: {fileID: 574896991}
   levelPanel: {fileID: 1826126304}
   leaderBoardPanel: {fileID: 1767688432}
+  notificationPanel: {fileID: 1742986077}
   profileUserName_Text: {fileID: 463067433}
   leaderboardUserName_Text: {fileID: 728401795}
   scrollViewContent: {fileID: 1977321131}
   prefabLeaderPlayer: {fileID: 4864770981794654650, guid: bbda8fde17603974ea7cb87588a804b0, type: 3}
+  notif_Title_Text: {fileID: 1165105395}
+  notif_Message_Text: {fileID: 592682894}
 --- !u!4 &1275824110
 Transform:
   m_ObjectHideFlags: 0
@@ -17755,7 +17770,7 @@ RectTransform:
   m_Children:
   - {fileID: 1492357169}
   m_Father: {fileID: 310430914}
-  m_RootOrder: 4
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -17836,7 +17851,7 @@ RectTransform:
   - {fileID: 1348318914}
   - {fileID: 2128838784}
   m_Father: {fileID: 310430914}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -18268,7 +18283,7 @@ RectTransform:
   - {fileID: 1159550598}
   - {fileID: 1611593314}
   m_Father: {fileID: 310430914}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -20946,7 +20961,7 @@ RectTransform:
   m_Children:
   - {fileID: 1408164556}
   m_Father: {fileID: 310430914}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}

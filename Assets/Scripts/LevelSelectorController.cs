@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 public class LevelSelectorController : MonoBehaviour
 {
     //Objetos del canvas
-    public GameObject profilePanel, levelPanel, leaderBoardPanel;
+    public GameObject profilePanel, levelPanel, leaderBoardPanel, notificationPanel;
     //Text
     public TMP_Text profileUserName_Text, leaderboardUserName_Text;
     //Nombre de usuario
@@ -19,7 +19,25 @@ public class LevelSelectorController : MonoBehaviour
     //LeaderBoard
     public GameObject scrollViewContent;
     public GameObject prefabLeaderPlayer;
+    //Notifications
+    private NotificationController notificationController;
+    public TMP_Text notif_Title_Text, notif_Message_Text;
 
+    private void Awake()
+    {
+        notificationController = new NotificationController(notificationPanel, notif_Title_Text, notif_Message_Text);
+    }
+    // Start is called before the first frame update
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
     public void OpenLevelPanel()
     {
         levelPanel.SetActive(true);
@@ -28,7 +46,7 @@ public class LevelSelectorController : MonoBehaviour
         //Para que muestre el nombre
         userName = PlayerPrefs.GetString("UserName");
         profileUserName_Text.text = userName;
-        //Por si vuelve del leaderboard
+        //NOTE: Por si vuelve del leaderboard que elimine todos los objetos anteriores
         // Recorrer todos los hijos del objeto
         for (int i = 0; i < scrollViewContent.transform.childCount; i++)
         {
@@ -37,6 +55,10 @@ public class LevelSelectorController : MonoBehaviour
 
             // Destruir el hijo actual
             Destroy(childObject);
+        }
+        if (PlayerPrefs.GetString("UserName") != "Guest")
+        {
+            InitialBestRecord();
         }
     }
     public void OpenProfilePanel()
@@ -52,6 +74,16 @@ public class LevelSelectorController : MonoBehaviour
     {
         SceneManager.LoadScene(1);
     }
+    public void SelectLevel2()
+    {
+        if (PlayerPrefs.GetInt("score_1") != 100) {
+            notificationController.showNotificationMessage("Error","You must complete the previous level!!!");
+        }
+        else
+        {
+            SceneManager.LoadScene(2);
+        }
+    }
 
     public void OpenLeaderBoardPanel()
     {
@@ -63,17 +95,8 @@ public class LevelSelectorController : MonoBehaviour
 
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+  
+   
     //Metodo de descargar los datos de todos los jugadores para la LeaderBoard
     private void LoadUserDataScore1(List<User> listLeaderBoard)
     {
@@ -151,5 +174,76 @@ public class LevelSelectorController : MonoBehaviour
 
 
 
+    }
+    //NOTA: Se ha cambiado el lugar de esta funcion, ya que desde aqui cumple las dos funcionalides
+    //1. Limita la progresion del jugador
+    //2. Guarda los valores en el PlayerPrefs
+    void InitialBestRecord()
+    {
+        FirebaseDatabase.DefaultInstance
+           //Esto cogera los de puntuacion ordenados menor a mayor (por defecto y no se puede cambiar)
+           .GetReference("users").Child(PlayerPrefs.GetString("UserId"))
+           .GetValueAsync().ContinueWithOnMainThread(task =>
+           {
+               if (task.IsFaulted)
+               {
+                   // Handle the error...
+               }
+               else if (task.IsCompleted)
+               {
+
+                   DataSnapshot snapshot = task.Result;
+                   //Debug.Log(snapshot.GetRawJsonValue());
+                   //TODO: Hacer un condicional para cada nivel de la base de datos
+                   if (snapshot.HasChild("score_1"))
+                   {
+                       var dictionary = snapshot.Value as Dictionary<string, object>;
+                       if (dictionary != null)
+                       {
+                           int bestScore = 0;
+                           bestScore = int.Parse(dictionary["score_1"].ToString());
+                           Debug.Log("1"+bestScore);
+                           PlayerPrefs.SetInt("score_1", bestScore);
+
+
+                       }
+                   }
+                   if (snapshot.HasChild("score_2"))
+                   {
+                       var dictionary = snapshot.Value as Dictionary<string, object>;
+                       if (dictionary != null)
+                       {
+                           int bestScore = 0;
+
+                           bestScore = int.Parse(dictionary["score_2"].ToString());
+                           Debug.Log("2" + bestScore);
+                           PlayerPrefs.SetInt("score_2", bestScore);
+
+
+                       }
+                   }
+                   else {
+                       PlayerPrefs.SetInt("score_2", 0);
+                   }
+                   if (snapshot.HasChild("score_3"))
+                   {
+                       var dictionary = snapshot.Value as Dictionary<string, object>;
+                       if (dictionary != null)
+                       {
+                           int bestScore = 0;
+
+                           bestScore = int.Parse(dictionary["score_3"].ToString());
+                           Debug.Log("3"+bestScore);
+                           PlayerPrefs.SetInt("score_3", bestScore);
+
+
+                       }
+                   }
+                   else
+                   {
+                       PlayerPrefs.SetInt("score_3", 0);
+                   }
+               }
+           });
     }
 }
