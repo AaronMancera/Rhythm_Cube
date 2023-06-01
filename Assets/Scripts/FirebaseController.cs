@@ -42,14 +42,14 @@ public class FirebaseController : MonoBehaviour
     Firebase.Auth.FirebaseUser user;
     //Firebase RealtimeDatabase
     Firebase.Database.DatabaseReference database;
-
     //----------------------------------------------------------------------------------------------------------//
     bool IsSignIn = false;
     //Esto es para que cada vez que se inicie de nuevo el juego reinicie estos valores guardados netre sesiones
+    //Notifiacitions
+    private NotificationController notificationController;
     private void Awake()
     {
-        //PlayerPrefs.DeleteKey("UserName");
-        //PlayerPrefs.DeleteKey("UserEmail");
+        notificationController = new NotificationController(notificationPanel, notif_Title_Text, notif_Message_Text);
     }
     void Start()
     {
@@ -70,6 +70,7 @@ public class FirebaseController : MonoBehaviour
                 // Firebase Unity SDK is not safe to use here.
             }
         });
+
     }
 
     // Update is called once per frame
@@ -153,7 +154,7 @@ public class FirebaseController : MonoBehaviour
     {
         if (string.IsNullOrEmpty(loginEmail.text) && string.IsNullOrEmpty(loginPassword.text))
         {
-            showNotificationMessage("Error", "Fields Empty!\nPlease Input All Details");
+            createNotificationMessage("Error", "Fields Empty!\nPlease Input All Details");
             return;
         }
         // Hacer el login
@@ -190,7 +191,7 @@ public class FirebaseController : MonoBehaviour
     {
         if (string.IsNullOrEmpty(signupEmail.text) && string.IsNullOrEmpty(signupPassword.text) && string.IsNullOrEmpty(signupCPasswprd.text))
         {
-            showNotificationMessage("Error", "Fields Empty!\nPlease Input All Details");
+            createNotificationMessage("Error", "Fields Empty!\nPlease Input All Details");
             return;
         }
         // Hacer el registro
@@ -201,26 +202,22 @@ public class FirebaseController : MonoBehaviour
     {
         if (string.IsNullOrEmpty(forgetPassEmail.text))
         {
-            showNotificationMessage("Error", "Forget Email Empty");
+            createNotificationMessage("Error", "Forget Email Empty");
             return;
         }
         //Metodo de recuperacion de contraseña mediante el email
         forgetPasswordSubmit(forgetPassEmail.text);
     }
     //Creacion de la notificacion
-    private void showNotificationMessage(string title, string message)
+    public void createNotificationMessage(string title, string message)
     {
-        notif_Title_Text.text = "" + title;
-        notif_Message_Text.text = "" + message;
-        notificationPanel.SetActive(true);
-
+        
+        notificationController.showNotificationMessage(title, message);
     }
     //Cerrar la notificacion
     public void CloseNotif_Panel()
     {
-        notif_Title_Text.text = "";
-        notif_Message_Text.text = "";
-        notificationPanel.SetActive(false);
+        notificationController.CloseNotif_Panel();
     }
 
     /*
@@ -359,7 +356,7 @@ public class FirebaseController : MonoBehaviour
                 Debug.Log("User profile updated successfully.");
                 //Inserccion en el RealtimeDatabse
                 writeNewUser(user.UserId, user.DisplayName, user.Email);
-                showNotificationMessage("Alert", "Account Successful Created");
+                createNotificationMessage("Alert", "Account Successful Created");
 
 
             });
@@ -394,7 +391,7 @@ public class FirebaseController : MonoBehaviour
         if (firebaseEx != null)
         {
             var errorCode = (AuthError)firebaseEx.ErrorCode;
-            showNotificationMessage("Error", GetErrorMessage(errorCode));
+            createNotificationMessage("Error", GetErrorMessage(errorCode));
         }
     }
     //Recogedor de errores
@@ -448,7 +445,7 @@ public class FirebaseController : MonoBehaviour
                 }
                 return;
             }
-            showNotificationMessage("Alert", "Successfully Send Email");
+            createNotificationMessage("Alert", "Successfully Send Email");
         });
     }
 }
