@@ -17,7 +17,15 @@ Datos de pruebas
 ---------------------
 username: Demo
 email: demo@gmail.com
-password: demo123
+password: 123123
+---------------------
+username: Demo2
+email: demo2@gmail.com
+password: 123123
+---------------------
+username: Demo3
+email: demo3@gmail.com
+password: 123123
 ---------------------
 
 */
@@ -364,12 +372,14 @@ public class FirebaseController : MonoBehaviour
             });
         }
     }
+    //NOTE: Esta funcion es ESENCIAL para guardar los datos en la datarealtime
     private void writeNewUser(string userId, string name, string email)
     {
         User user = new User(name, email);
         string json = JsonUtility.ToJson(user);
 
         database.Child("users").Child(userId).SetRawJsonValueAsync(json);
+
     }
     //Cuando se cierre la escena
     void OnDestroy()

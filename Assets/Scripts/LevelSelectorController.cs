@@ -84,6 +84,17 @@ public class LevelSelectorController : MonoBehaviour
             SceneManager.LoadScene(2);
         }
     }
+    public void SelectLevel3()
+    {
+        if (PlayerPrefs.GetInt("score_2") != 100)
+        {
+            notificationController.showNotificationMessage("Error", "You must complete the previous level!!!");
+        }
+        else
+        {
+            SceneManager.LoadScene(3);
+        }
+    }
 
     public void OpenLeaderBoardPanel()
     {
@@ -102,7 +113,7 @@ public class LevelSelectorController : MonoBehaviour
     {
         FirebaseDatabase.DefaultInstance
             //Esto cogera los de puntuacion ordenados menor a mayor (por defecto y no se puede cambiar)
-            .GetReference("users").OrderByChild("score_1")
+            .GetReference("users").OrderByChild("global")
             .GetValueAsync().ContinueWithOnMainThread(task =>
             {
                 //Si entra como guest, simplemente sera capturado aqui el error
@@ -202,11 +213,16 @@ public class LevelSelectorController : MonoBehaviour
                        {
                            int bestScore = 0;
                            bestScore = int.Parse(dictionary["score_1"].ToString());
-                           Debug.Log("1"+bestScore);
                            PlayerPrefs.SetInt("score_1", bestScore);
+                           Debug.Log(bestScore);
+
 
 
                        }
+                   }
+                   else
+                   {
+                       PlayerPrefs.SetInt("score_1", 0);
                    }
                    if (snapshot.HasChild("score_2"))
                    {
@@ -214,10 +230,10 @@ public class LevelSelectorController : MonoBehaviour
                        if (dictionary != null)
                        {
                            int bestScore = 0;
-
                            bestScore = int.Parse(dictionary["score_2"].ToString());
-                           Debug.Log("2" + bestScore);
                            PlayerPrefs.SetInt("score_2", bestScore);
+                           Debug.Log(bestScore);
+
 
 
                        }
@@ -233,8 +249,8 @@ public class LevelSelectorController : MonoBehaviour
                            int bestScore = 0;
 
                            bestScore = int.Parse(dictionary["score_3"].ToString());
-                           Debug.Log("3"+bestScore);
                            PlayerPrefs.SetInt("score_3", bestScore);
+                           Debug.Log(bestScore);
 
 
                        }
@@ -243,6 +259,7 @@ public class LevelSelectorController : MonoBehaviour
                    {
                        PlayerPrefs.SetInt("score_3", 0);
                    }
+                  
                }
            });
     }

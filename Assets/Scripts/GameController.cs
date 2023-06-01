@@ -48,6 +48,8 @@ public class GameController : MonoBehaviour
 
 
 
+
+
     private void Awake()
     {
         //metodo que buscara en la escena automaticamente el objeto cameracontroller
@@ -60,7 +62,6 @@ public class GameController : MonoBehaviour
             GameObject gameObject = jumpButton.gameObject;
             gameObject.SetActive(false);
         }
-
     }
     // Start is called before the first frame update
     void Start()
@@ -70,9 +71,16 @@ public class GameController : MonoBehaviour
         audioSource.Play();
         Time.timeScale = 1f;
         spawnPlayer = player.transform.position;
+        InitializeFirebase();
+
         //Inicializa el score de manera local       
         InitialText();
-        InitializeFirebase();
+        Debug.Log(PlayerPrefs.GetInt("score_1"));
+        Debug.Log(PlayerPrefs.GetInt("score_2"));
+        Debug.Log(PlayerPrefs.GetInt("score_3"));
+        Debug.Log("-----");
+
+        Debug.Log(PlayerPrefs.GetInt("score_1") + PlayerPrefs.GetInt("score_2") + PlayerPrefs.GetInt("score_3"));
 
 
     }
@@ -94,7 +102,6 @@ public class GameController : MonoBehaviour
             if (PlayerPrefs.GetInt("score_1") != 0)
             {
                 bestScore = PlayerPrefs.GetInt("score_1");
-                Debug.Log("Nivel 1:" + bestScore);
 
                 bestScoreText.text = bestScore.ToString();
                 pauseBestScoreText.text = bestScore.ToString();
@@ -110,7 +117,21 @@ public class GameController : MonoBehaviour
             if (PlayerPrefs.GetInt("score_2") != 0)
             {
                 bestScore = PlayerPrefs.GetInt("score_2");
-                Debug.Log("Nivel 2:" + bestScore);
+
+                bestScoreText.text = bestScore.ToString();
+                pauseBestScoreText.text = bestScore.ToString();
+                endingBestScoreText.text = bestScore.ToString();
+            }
+            else
+            {
+                bestScore = 0;
+            }
+        }
+        else if (nivel == "level_3")
+        {
+            if (PlayerPrefs.GetInt("score_3") != 0)
+            {
+                bestScore = PlayerPrefs.GetInt("score_3");
 
                 bestScoreText.text = bestScore.ToString();
                 pauseBestScoreText.text = bestScore.ToString();
@@ -166,6 +187,10 @@ public class GameController : MonoBehaviour
                         else if (nivel == "level_2")
                         {
                             PlayerPrefs.SetInt("score_2", bestScore);
+                        }
+                        else if (nivel == "level_3")
+                        {
+                            PlayerPrefs.SetInt("score_3", bestScore);
                         }
                     }
 
@@ -296,12 +321,27 @@ public class GameController : MonoBehaviour
 
             //Database realtime actualiza el campo de score_1
             //Todas las previsiones posibles para que no haya fallos en la subida
+
+            //Guarda en los datos guardados
+
+            //NOTE: Guarda en los datos guardados en cada nivel
+            if (nivel == "level_1")
+            {
+                PlayerPrefs.SetInt("score_1", bestScore);
+            }
+            else if (nivel == "level_2")
+            {
+                PlayerPrefs.SetInt("score_2", bestScore);
+            }
+            else if (nivel == "level_3")
+            {
+                PlayerPrefs.SetInt("score_3", bestScore);
+            }
+
             if (PlayerPrefs.GetString("UserId") != null && PlayerPrefs.GetString("UserName") != "Guest" && auth != null)
             {
                 WriteScoreInDatabase(PlayerPrefs.GetString("UserId"), bestScore);
             }
-            //Guarda en los datos guardados
-            PlayerPrefs.SetInt("score_1", bestScore);
         }
         time = 0;
         scoreText.text = score.ToString();
@@ -314,6 +354,7 @@ public class GameController : MonoBehaviour
     //Metodo de base de datos apra actualizar el valor del primero score
     private void WriteScoreInDatabase(string userId, int score)
     {
+        //recoger primero el valor del global score
         /*
         https://tfgrhythmcube-default-rtdb.europe-west1.firebasedatabase.app/
                                                                              users/
@@ -341,6 +382,26 @@ public class GameController : MonoBehaviour
                 return TransactionResult.Success(mutableData);
             });
         }
+        else if (nivel == "level_3")
+        {
+            database.Child("users").Child(userId).Child("score_3").RunTransaction(mutableData =>
+            {
+                // if the data isn't an int or is null, just make it 0
+
+                mutableData.Value = score;
+                return TransactionResult.Success(mutableData);
+            });
+        }
+        database.Child("users").Child(userId).Child("global").RunTransaction(mutableData =>
+        {
+            // if the data isn't an int or is null, just make it 0
+           
+
+            Debug.Log(PlayerPrefs.GetInt("score_1") + PlayerPrefs.GetInt("score_2") + PlayerPrefs.GetInt("score_3"));
+            mutableData.Value = PlayerPrefs.GetInt("score_1")+ PlayerPrefs.GetInt("score_2")+ PlayerPrefs.GetInt("score_3");
+
+            return TransactionResult.Success(mutableData);
+        });
     }
     //Salir al menu
     public void Exit()
@@ -370,7 +431,6 @@ public class GameController : MonoBehaviour
         pauseScoreText.text = score.ToString();
         endingScoreText.text = score.ToString();
 
-        //PlayerPrefs.SetFloat("Score_lvl1", score);
 
     }
     //Metodo que detecta cuando toca un layer End
