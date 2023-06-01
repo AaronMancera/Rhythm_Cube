@@ -23,6 +23,21 @@ public class LevelSelectorController : MonoBehaviour
     private NotificationController notificationController;
     public TMP_Text notif_Title_Text, notif_Message_Text;
 
+    private void Awake()
+    {
+        notificationController = new NotificationController(notificationPanel, notif_Title_Text, notif_Message_Text);
+    }
+    // Start is called before the first frame update
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
     public void OpenLevelPanel()
     {
         levelPanel.SetActive(true);
@@ -80,21 +95,8 @@ public class LevelSelectorController : MonoBehaviour
 
     }
 
-    private void Awake()
-    {
-        notificationController = new NotificationController(notificationPanel, notif_Title_Text, notif_Message_Text);
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+  
+   
     //Metodo de descargar los datos de todos los jugadores para la LeaderBoard
     private void LoadUserDataScore1(List<User> listLeaderBoard)
     {
@@ -173,6 +175,9 @@ public class LevelSelectorController : MonoBehaviour
 
 
     }
+    //NOTA: Se ha cambiado el lugar de esta funcion, ya que desde aqui cumple las dos funcionalides
+    //1. Limita la progresion del jugador
+    //2. Guarda los valores en el PlayerPrefs
     void InitialBestRecord()
     {
         FirebaseDatabase.DefaultInstance
@@ -211,11 +216,14 @@ public class LevelSelectorController : MonoBehaviour
                            int bestScore = 0;
 
                            bestScore = int.Parse(dictionary["score_2"].ToString());
-                           Debug.Log("2"+bestScore);
+                           Debug.Log("2" + bestScore);
                            PlayerPrefs.SetInt("score_2", bestScore);
 
 
                        }
+                   }
+                   else {
+                       PlayerPrefs.SetInt("score_2", 0);
                    }
                    if (snapshot.HasChild("score_3"))
                    {
@@ -226,9 +234,14 @@ public class LevelSelectorController : MonoBehaviour
 
                            bestScore = int.Parse(dictionary["score_3"].ToString());
                            Debug.Log("3"+bestScore);
+                           PlayerPrefs.SetInt("score_3", bestScore);
 
 
                        }
+                   }
+                   else
+                   {
+                       PlayerPrefs.SetInt("score_3", 0);
                    }
                }
            });

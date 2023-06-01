@@ -100,6 +100,7 @@ public class GameController : MonoBehaviour
             if (PlayerPrefs.GetInt("score_1") != 0)
             {
                 bestScore = PlayerPrefs.GetInt("score_1");
+                Debug.Log("Nivel 1:" + bestScore);
 
                 bestScoreText.text = bestScore.ToString();
                 pauseBestScoreText.text = bestScore.ToString();
@@ -111,12 +112,11 @@ public class GameController : MonoBehaviour
             }
         }
         else if (nivel == "level_2")
-
-
         {
             if (PlayerPrefs.GetInt("score_2") != 0)
             {
                 bestScore = PlayerPrefs.GetInt("score_2");
+                Debug.Log("Nivel 2:" + bestScore);
 
                 bestScoreText.text = bestScore.ToString();
                 pauseBestScoreText.text = bestScore.ToString();
