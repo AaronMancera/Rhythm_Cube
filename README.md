@@ -12,15 +12,15 @@ El juego incluye sistema de porgresión en linea, mediante la creacion de una cu
 
 Actualmente se encuentra terminado para los requisitos para completar el TFG en el tiempo determinado que me habian dado (13 de julio), asi que dispone de 3 niveles totalmentes jugables.
 
-<img src="ImagesReedme/menuLevel.jpg" width="900" height="500">
+<img src="ImagesReadme/menuLevel.jpg" width="900" height="500">
 
 El jugador correra de manera automatica hacia la derecha y debera completar el nivel para conseguir la puntuación máxima y quedar como el mejor en la leaderboard.
 
-<img src="ImagesReedme/saltar.jpg" width="900" height="500">
+<img src="ImagesReadme/saltar.jpg" width="900" height="500">
 
 Durante el nivel cambiara su metodo de desplazamiento vertical a uno de planeo mediante el uso de una serie de protales.
 
-<img src="ImagesReedme/volar.jpg" width="900" height="500">
+<img src="ImagesReadme/volar.jpg" width="900" height="500">
 
 # Tecnologias
 Para este proyecto he utilizado Unity + Firebase.
