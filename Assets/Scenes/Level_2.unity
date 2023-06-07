@@ -471,11 +471,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6743368466927186824, guid: 178c06bd0ead68a49848bfda1c89f52f, type: 3}
       propertyPath: m_Size.y
-      value: 0.9509802
+      value: 0.8647603
       objectReference: {fileID: 0}
     - target: {fileID: 6743368466927186824, guid: 178c06bd0ead68a49848bfda1c89f52f, type: 3}
       propertyPath: m_Offset.y
-      value: -0.024509922
+      value: -0.06761986
       objectReference: {fileID: 0}
     - target: {fileID: 6743368467617528282, guid: 178c06bd0ead68a49848bfda1c89f52f, type: 3}
       propertyPath: m_RootOrder
@@ -4722,10 +4722,13 @@ MonoBehaviour:
   profilePanel: {fileID: 0}
   levelPanel: {fileID: 0}
   leaderBoardPanel: {fileID: 0}
+  notificationPanel: {fileID: 0}
   profileUserName_Text: {fileID: 0}
   leaderboardUserName_Text: {fileID: 0}
   scrollViewContent: {fileID: 0}
   prefabLeaderPlayer: {fileID: 0}
+  notif_Title_Text: {fileID: 0}
+  notif_Message_Text: {fileID: 0}
 --- !u!1001 &537587871
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5157,11 +5160,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 6743368466927186824, guid: 178c06bd0ead68a49848bfda1c89f52f, type: 3}
       propertyPath: m_Size.y
-      value: 0.9661753
+      value: 0.89195484
       objectReference: {fileID: 0}
     - target: {fileID: 6743368466927186824, guid: 178c06bd0ead68a49848bfda1c89f52f, type: 3}
       propertyPath: m_Offset.y
-      value: -0.016912341
+      value: -0.05402258
       objectReference: {fileID: 0}
     - target: {fileID: 6743368467617528282, guid: 178c06bd0ead68a49848bfda1c89f52f, type: 3}
       propertyPath: m_RootOrder
@@ -15942,8 +15945,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: afa8792908e862643b7a7f5b2475af7b, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4

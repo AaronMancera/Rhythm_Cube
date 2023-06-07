@@ -6656,10 +6656,13 @@ MonoBehaviour:
   profilePanel: {fileID: 0}
   levelPanel: {fileID: 0}
   leaderBoardPanel: {fileID: 0}
+  notificationPanel: {fileID: 0}
   profileUserName_Text: {fileID: 0}
   leaderboardUserName_Text: {fileID: 0}
   scrollViewContent: {fileID: 0}
   prefabLeaderPlayer: {fileID: 0}
+  notif_Title_Text: {fileID: 0}
+  notif_Message_Text: {fileID: 0}
 --- !u!1001 &544608441
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26106,8 +26109,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: afa8792908e862643b7a7f5b2475af7b, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
